@@ -1,262 +1,285 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // -------------------------------
-  // Мобільне меню
-  // -------------------------------
-  const burgerBtn = document.querySelector('.burger-menu');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const closeBtn = document.getElementById('closeMobileMenu');
-  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-  const menuLinks = document.querySelectorAll('.mobile-menu-link');
-  const scrollButtons = document.querySelector('.scroll-buttons');
-  const scrollUpBtn = document.querySelector('.scroll-btn.up');
-  const scrollDownBtn = document.querySelector('.scroll-btn.down');
+// ======= helpers =======
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-  function closeMobileMenu() {
-    mobileMenu.classList.remove('open');
-    mobileMenuOverlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    if (scrollButtons) scrollButtons.style.display = 'flex';
+const API_KEY = window.OWM_API_KEY; // з index.html
+const GEO_URL = "https://api.openweathermap.org/geo/1.0/direct";
+const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
+
+// normalize for startsWith across diacritics
+const removeDiacritics = (s) =>
+  (s || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const startsWithLocale = (name, query, lang) => {
+  const a = removeDiacritics(String(name).toLocaleLowerCase(lang));
+  const b = removeDiacritics(String(query).toLocaleLowerCase(lang));
+  return a.startsWith(b);
+};
+
+let citiesFallback = []; // офлайн fallback з cities.json
+let selectedPlace = null; // { name, lat, lon, country }
+
+// ======= load fallback once =======
+fetch("cities.json")
+  .then((r) => (r.ok ? r.json() : []))
+  .then((data) => (citiesFallback = Array.isArray(data) ? data : []))
+  .catch(() => { /* ignore */ });
+
+// ======= UI refs =======
+const input = $("#cityInput");
+const suggestions = $("#suggestions");
+const langSelect = $("#langSelect");
+const searchBtn = $("#searchBtn");
+const daysEl = $("#weather");
+
+// ======= suggestions flow =======
+async function fetchRemoteSuggestions(q, lang) {
+  const url = new URL(GEO_URL);
+  url.searchParams.set("q", q);
+  url.searchParams.set("limit", "10");
+  url.searchParams.set("appid", API_KEY);
+  url.searchParams.set("lang", lang);
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Geo API error");
+  const data = await res.json();
+
+  // map to displayName (localized) + coords
+  return data
+    .map((it) => {
+      // Try local_names first
+      const local = (it.local_names && it.local_names[lang]) || null;
+      const displayName = local || it.name;
+      return {
+        name: displayName,
+        rawName: it.name,
+        country: it.country || "",
+        lat: it.lat,
+        lon: it.lon,
+      };
+    })
+    .filter((it) => startsWithLocale(it.name, q, lang));
+}
+
+function fetchLocalSuggestions(q, lang) {
+  const key = lang === "uk" ? "name_uk" : lang === "cz" ? "name_cs" : "name_en";
+  return (citiesFallback || [])
+    .map((it) => ({
+      name: it[key] || it.name_en,
+      country: it.country || "",
+      lat: null,
+      lon: null,
+    }))
+    .filter((it) => startsWithLocale(it.name, q, lang))
+    .slice(0, 10);
+}
+
+function renderSuggestions(items) {
+  if (!items || items.length === 0) {
+    suggestions.style.display = "none";
+    suggestions.innerHTML = "";
+    return;
   }
+  const html = items
+    .map(
+      (it, idx) => `
+      <div class="suggestions__item" data-idx="${idx}">
+        <div class="suggestions__name">${it.name}</div>
+        <div class="suggestions__cc">${it.country}</div>
+      </div>`
+    )
+    .join("");
+  suggestions.innerHTML = html;
+  suggestions.style.display = "block";
 
-  burgerBtn.addEventListener('click', () => {
-    mobileMenu.classList.add('open');
-    mobileMenuOverlay.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    if (scrollButtons) scrollButtons.style.display = 'none';
-  });
-
-  closeBtn.addEventListener('click', closeMobileMenu);
-  mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-
-  menuLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      const targetId = link.getAttribute('href');
-      const targetSection = document.querySelector(targetId);
-      if (targetSection) {
-        targetSection.scrollIntoView({ behavior: 'smooth' });
-      }
-      closeMobileMenu();
+  // click binding
+  $$("#suggestions .suggestions__item").forEach((el, i) => {
+    el.addEventListener("click", () => {
+      const chosen = items[i];
+      selectedPlace = chosen; // might be without coords if from fallback
+      input.value = chosen.name;
+      suggestions.style.display = "none";
+      suggestions.innerHTML = "";
     });
   });
+}
 
-  if (scrollUpBtn) {
-    scrollUpBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
+let suggestTimer;
+function handleInput() {
+  const q = input.value.trim();
+  const lang = langSelect.value;
+  selectedPlace = null; // typing resets selection
 
-  if (scrollDownBtn) {
-    scrollDownBtn.addEventListener('click', () => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    });
-  }
-
-  // Свайп для закриття мобільного меню
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  mobileMenu.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  });
-
-  mobileMenu.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-  });
-
-  function handleSwipe() {
-    const swipeDistance = touchEndX - touchStartX;
-    const minSwipeDistance = 50;
-    if (Math.abs(swipeDistance) > minSwipeDistance) {
-      closeMobileMenu();
+  if (q.length < 1) {
+    renderSuggestions([]);
+    return;
     }
-  }
-
-  // -------------------------------
-  // Показати ще (проєкти)
-  // -------------------------------
-  const items = document.querySelectorAll('.project-item');
-  const loadMoreBtn = document.getElementById('load-more-btn');
-  const itemsPerClick = 4;
-  let currentIndex = 0;
-
-  function showNextItems() {
-    const nextItems = Array.from(items).slice(currentIndex, currentIndex + itemsPerClick);
-    nextItems.forEach((item, index) => {
-      setTimeout(() => {
-        item.classList.add('visible');
-      }, index * 100);
-    });
-    currentIndex += itemsPerClick;
-    if (currentIndex >= items.length) {
-      loadMoreBtn.style.display = 'none';
+  clearTimeout(suggestTimer);
+  suggestTimer = setTimeout(async () => {
+    try {
+      const remote = await fetchRemoteSuggestions(q, lang);
+      if (remote.length) return renderSuggestions(remote);
+      // else fallback
+      const local = fetchLocalSuggestions(q, lang);
+      renderSuggestions(local);
+    } catch {
+      const local = fetchLocalSuggestions(q, lang);
+      renderSuggestions(local);
     }
-  }
+  }, 120);
+}
 
-  if (loadMoreBtn && items.length > 0) {
-    showNextItems();
-    loadMoreBtn.addEventListener('click', showNextItems);
-  }
-
-  // -------------------------------
-  // Кнопка скрол вправо/вліво
-  // -------------------------------
-  const scrollContainer = document.getElementById('projects-container');
-  const scrollBtn = document.getElementById('scrollNextBtn');
-
-  if (scrollContainer && scrollBtn) {
-    scrollBtn.addEventListener('click', () => {
-      const scrollAmount = scrollContainer.offsetWidth * 0.1;
-      if (scrollContainer.scrollLeft + scrollAmount >= scrollContainer.scrollWidth - scrollAmount) {
-        scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
-    });
-  }
-
-  // -------------------------------
-  // Кнопка "вгору" (20% скролу)
-  // -------------------------------
-  const toTopBtn = document.getElementById('to-top');
-  const THRESHOLD = 0.20;
-
-  if (toTopBtn) {
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY || window.pageYOffset;
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollY > pageHeight * THRESHOLD) {
-        toTopBtn.classList.add('show');
-      } else {
-        toTopBtn.classList.remove('show');
-      }
-    });
-
-    toTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
-  // -------------------------------
-  // Показ резюме зверху поверх сайту
-  // -------------------------------
-  const resume = document.getElementById('resume');
-  const resumeLinks = document.querySelectorAll('.show-resume');
-
-  function outsideClickListener(e) {
-    if (resume && !resume.contains(e.target)) {
-      resume.style.display = 'none';
-      document.removeEventListener('mousedown', outsideClickListener);
-    }
-  }
-
-  if (resume && !resume.querySelector('.close-resume')) {
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '×';
-    closeBtn.className = 'close-resume';
-    Object.assign(closeBtn.style, {
-      position: 'absolute',
-      top: '10px',
-      right: '20px',
-      fontSize: '24px',
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      color: '#333',
-      zIndex: 10000,
-    });
-    resume.appendChild(closeBtn);
-
-    closeBtn.addEventListener('click', () => {
-      resume.style.display = 'none';
-      document.removeEventListener('mousedown', outsideClickListener);
-    });
-  }
-
-  if (resume && resumeLinks.length > 0) {
-    resumeLinks.forEach(link => {
-      link.addEventListener('click', function (event) {
-        event.preventDefault();
-        resume.style.display = 'block';
-        resume.scrollTop = 0;
-
-        setTimeout(() => {
-          document.addEventListener('mousedown', outsideClickListener);
-        }, 0);
-
-        // Закриваємо мобільне меню, якщо відкрито
-        closeMobileMenu?.();
-      });
-    });
-  }
-
-  // -------------------------------
-  // Модальне вікно зворотного зв'язку
-  // -------------------------------
-  const modalOverlay = document.querySelector('.modal-overlay');
-  const openModalBtn = document.querySelector('.one-button');
-  const closeModalBtn = document.querySelector('.modal-close');
-
-  if (modalOverlay && openModalBtn && closeModalBtn) {
-    openModalBtn.addEventListener('click', () => {
-      modalOverlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    });
-
-    closeModalBtn.addEventListener('click', () => {
-      modalOverlay.classList.remove('is-open');
-      document.body.style.overflow = '';
-    });
-
-    modalOverlay.addEventListener('click', (event) => {
-      if (event.target === modalOverlay) {
-        modalOverlay.classList.remove('is-open');
-        document.body.style.overflow = '';
-      }
-    });
-  }
-
-  // -------------------------------
-  // Обробка форми зворотного зв'язку
-  // -------------------------------
-  const form = document.querySelector('.modal-form');
-
-  if (form) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const privacyCheckbox = form.querySelector('#user-privacy');
-      if (!privacyCheckbox || !privacyCheckbox.checked) {
-        alert('Будь ласка, прийміть умови Приватної політики перед відправкою.');
-        privacyCheckbox?.focus();
-        return;
-      }
-
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch(form.action, {
-          method: form.method,
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          alert('Дякуємо! Ваші дані надіслані.');
-          form.reset();
-          if (modalOverlay) {
-            modalOverlay.classList.remove('is-open');
-            document.body.style.overflow = '';
-          }
-        } else {
-          alert('Виникла помилка при відправці форми. Спробуйте пізніше.');
-        }
-      } catch (error) {
-        alert('Помилка мережі. Спробуйте пізніше.');
-      }
-    });
+input.addEventListener("input", handleInput);
+input.addEventListener("focus", handleInput);
+langSelect.addEventListener("change", handleInput);
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".search__input-wrap")) {
+    suggestions.style.display = "none";
   }
 });
+
+// ======= search flow =======
+async function ensureCoords(placeName, lang) {
+  // if we already selected suggestion with coords — good
+  if (selectedPlace && selectedPlace.lat && selectedPlace.lon) {
+    return selectedPlace;
+  }
+  // fallback: geocode by the typed name
+  const url = new URL(GEO_URL);
+  url.searchParams.set("q", placeName);
+  url.searchParams.set("limit", "1");
+  url.searchParams.set("appid", API_KEY);
+  url.searchParams.set("lang", lang);
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Geocoding failed");
+  const data = await res.json();
+  if (!data || !data.length) throw new Error("Місто не знайдено");
+  const it = data[0];
+  return {
+    name: (it.local_names && it.local_names[lang]) || it.name,
+    lat: it.lat,
+    lon: it.lon,
+    country: it.country || "",
+  };
+}
+
+function groupByDay(list) {
+  const by = {};
+  for (const item of list) {
+    const date = item.dt_txt.split(" ")[0]; // YYYY-MM-DD
+    (by[date] ||= []).push(item);
+  }
+  return by;
+}
+
+function pickRepresentative(items) {
+  // пріоритет 12:00, інакше — середній елемент
+  const noon = items.find((it) => it.dt_txt.includes("12:00:00"));
+  return noon || items[Math.floor(items.length / 2)];
+}
+
+function classifyBg(main) {
+  const m = (main || "").toLowerCase();
+  if (m.includes("clear")) return "bg-sunny";
+  if (m.includes("rain")) return "bg-rain";
+  if (m.includes("snow")) return "bg-snow";
+  if (m.includes("thunder")) return "bg-thunder";
+  if (m.includes("drizzle")) return "bg-drizzle";
+  if (m.includes("mist") || m.includes("fog") || m.includes("haze"))
+    return "bg-mist";
+  if (m.includes("cloud")) return "bg-clouds";
+  return "bg-default";
+}
+
+function fmtDate(dateStr, lang) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(lang, { weekday: "short", day: "2-digit", month: "short" });
+}
+
+function makeIconUrl(icon) {
+  return `https://openweathermap.org/img/wn/${icon}@2x.png`;
+}
+
+function renderDays(cityName, data, lang) {
+  daysEl.innerHTML = "";
+
+  if (!data || !data.list) {
+    daysEl.innerHTML = `<p>Немає даних.</p>`;
+    return;
+  }
+  const byDay = groupByDay(data.list);
+  const dates = Object.keys(byDay).slice(0, 5); // 5 днів
+
+  dates.forEach((date) => {
+    const items = byDay[date];
+    const rep = pickRepresentative(items);
+    const main = rep.weather?.[0]?.main || "";
+    const desc = rep.weather?.[0]?.description || "";
+    const icon = rep.weather?.[0]?.icon || "01d";
+    const now = Math.round(rep.main?.temp ?? 0);
+    const tmin = Math.round(Math.min(...items.map((i) => i.main.temp_min)));
+    const tmax = Math.round(Math.max(...items.map((i) => i.main.temp_max)));
+    const wind = Math.round(rep.wind?.speed ?? 0);
+    const humidity = Math.round(rep.main?.humidity ?? 0);
+
+    const bgClass = classifyBg(main);
+
+    const el = document.createElement("div");
+    el.className = `day ${bgClass}`;
+    el.innerHTML = `
+      <div class="day__overlay"></div>
+      <div class="day__content">
+        <div class="day__top">
+          <div>
+            <div class="day__date">${fmtDate(date, lang)}</div>
+            <div class="day__desc">${desc}</div>
+          </div>
+          <img src="${makeIconUrl(icon)}" alt="${desc}" width="64" height="64" />
+        </div>
+
+        <div class="day__temp">
+          <div class="now">${now}°</div>
+          <div class="minmax">${tmin}° / ${tmax}°</div>
+        </div>
+
+        <div class="day__meta">
+          <div>💨 ${wind} м/с</div>
+          <div>💧 ${humidity}%</div>
+        </div>
+      </div>
+    `;
+    daysEl.appendChild(el);
+  });
+}
+
+async function onSearch() {
+  const lang = langSelect.value;
+  const q = input.value.trim();
+  if (!q) {
+    input.focus();
+    return;
+  }
+  daysEl.innerHTML = `<p>Завантаження…</p>`;
+  try {
+    const place = await ensureCoords(q, lang);
+    const url = new URL(FORECAST_URL);
+    url.searchParams.set("lat", place.lat);
+    url.searchParams.set("lon", place.lon);
+    url.searchParams.set("appid", API_KEY);
+    url.searchParams.set("units", "metric");
+    url.searchParams.set("lang", lang);
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Forecast error");
+    const data = await res.json();
+
+    renderDays(place.name, data, lang);
+  } catch (e) {
+    daysEl.innerHTML = `<p style="color:#fca5a5">Помилка: ${e.message || e}</p>`;
+  }
+}
+
+searchBtn.addEventListener("click", onSearch);
