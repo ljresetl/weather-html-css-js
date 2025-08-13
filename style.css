@@ -10,10 +10,12 @@
 * {
   box-sizing: border-box;
 }
+
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial,
@@ -66,6 +68,7 @@ body {
   outline: none;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
+
 .search__input:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25),
@@ -92,9 +95,11 @@ body {
   cursor: pointer;
   transition: transform 0.05s ease, filter 0.2s ease;
 }
+
 .btn:active {
   transform: translateY(1px) scale(0.99);
 }
+
 .btn:hover {
   filter: brightness(1.05);
 }
@@ -115,6 +120,7 @@ body {
   overflow-y: auto;
   backdrop-filter: blur(6px);
 }
+
 .suggestions__item {
   padding: 10px 12px;
   display: flex;
@@ -123,30 +129,55 @@ body {
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .suggestions__item:last-child {
   border-bottom: 0;
 }
+
 .suggestions__name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .suggestions__cc {
   color: var(--muted);
   font-size: 12px;
 }
 
-/* ===== days column ===== */
+/* ===== days grid ===== */
 .days {
-  display: flex;
-  /* flex-direction: column; у стовпчик */
+  display: grid;
   gap: 16px;
+  grid-template-columns: repeat(
+    1,
+    1fr
+  ); /* мобільні телефони за замовчуванням */
 }
 
-/* weather card is square-ish ~50vw up to 360px */
+/* 411px - 600px — 2 картки */
+@media (min-width: 411px) and (max-width: 600px) {
+  .days {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 601px - 768px — 3 картки */
+@media (min-width: 601px) and (max-width: 768px) {
+  .days {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* >768px — 4 картки */
+@media (min-width: 769px) {
+  .days {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .day {
   position: relative;
-  width: min(50vw, 360px);
   aspect-ratio: 1 / 1;
   border-radius: 20px;
   overflow: hidden;
@@ -156,6 +187,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
 .day__overlay {
   position: absolute;
   inset: 0;
@@ -165,6 +197,7 @@ body {
     rgba(2, 6, 23, 0.75)
   );
 }
+
 .day__content {
   position: absolute;
   inset: 0;
@@ -173,33 +206,40 @@ body {
   justify-content: space-between;
   padding: 14px;
 }
+
 .day__top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
+
 .day__date {
   font-weight: 600;
 }
+
 .day__desc {
   color: var(--muted);
   font-size: 14px;
 }
+
 .day__temp {
   display: flex;
   align-items: baseline;
   gap: 10px;
   font-weight: 600;
 }
+
 .day__temp .now {
   font-size: 42px;
   line-height: 1;
 }
+
 .day__temp .minmax {
   color: var(--muted);
   font-size: 14px;
 }
+
 .day__meta {
   display: flex;
   gap: 12px;
@@ -231,11 +271,4 @@ body {
 }
 .bg-default {
   background-image: url("https://images.unsplash.com/photo-1454789548928-9efd52dc4031?q=80&w=1600&auto=format&fit=crop");
-}
-
-/* small screens */
-@media (max-width: 520px) {
-  .day {
-    width: 100%;
-  }
 }

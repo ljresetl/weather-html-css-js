@@ -8,9 +8,7 @@ const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
 
 // normalize for startsWith across diacritics
 const removeDiacritics = (s) =>
-  (s || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 const startsWithLocale = (name, query, lang) => {
   const a = removeDiacritics(String(name).toLocaleLowerCase(lang));
@@ -25,7 +23,7 @@ let selectedPlace = null; // { name, lat, lon, country }
 fetch("cities.json")
   .then((r) => (r.ok ? r.json() : []))
   .then((data) => (citiesFallback = Array.isArray(data) ? data : []))
-  .catch(() => { /* ignore */ });
+  .catch(() => {});
 
 // ======= UI refs =======
 const input = $("#cityInput");
@@ -46,10 +44,8 @@ async function fetchRemoteSuggestions(q, lang) {
   if (!res.ok) throw new Error("Geo API error");
   const data = await res.json();
 
-  // map to displayName (localized) + coords
   return data
     .map((it) => {
-      // Try local_names first
       const local = (it.local_names && it.local_names[lang]) || null;
       const displayName = local || it.name;
       return {
@@ -94,11 +90,10 @@ function renderSuggestions(items) {
   suggestions.innerHTML = html;
   suggestions.style.display = "block";
 
-  // click binding
   $$("#suggestions .suggestions__item").forEach((el, i) => {
     el.addEventListener("click", () => {
       const chosen = items[i];
-      selectedPlace = chosen; // might be without coords if from fallback
+      selectedPlace = chosen;
       input.value = chosen.name;
       suggestions.style.display = "none";
       suggestions.innerHTML = "";
@@ -110,18 +105,17 @@ let suggestTimer;
 function handleInput() {
   const q = input.value.trim();
   const lang = langSelect.value;
-  selectedPlace = null; // typing resets selection
+  selectedPlace = null;
 
   if (q.length < 1) {
     renderSuggestions([]);
     return;
-    }
+  }
   clearTimeout(suggestTimer);
   suggestTimer = setTimeout(async () => {
     try {
       const remote = await fetchRemoteSuggestions(q, lang);
       if (remote.length) return renderSuggestions(remote);
-      // else fallback
       const local = fetchLocalSuggestions(q, lang);
       renderSuggestions(local);
     } catch {
@@ -142,11 +136,9 @@ document.addEventListener("click", (e) => {
 
 // ======= search flow =======
 async function ensureCoords(placeName, lang) {
-  // if we already selected suggestion with coords — good
   if (selectedPlace && selectedPlace.lat && selectedPlace.lon) {
     return selectedPlace;
   }
-  // fallback: geocode by the typed name
   const url = new URL(GEO_URL);
   url.searchParams.set("q", placeName);
   url.searchParams.set("limit", "1");
@@ -169,14 +161,13 @@ async function ensureCoords(placeName, lang) {
 function groupByDay(list) {
   const by = {};
   for (const item of list) {
-    const date = item.dt_txt.split(" ")[0]; // YYYY-MM-DD
+    const date = item.dt_txt.split(" ")[0];
     (by[date] ||= []).push(item);
   }
   return by;
 }
 
 function pickRepresentative(items) {
-  // пріоритет 12:00, інакше — середній елемент
   const noon = items.find((it) => it.dt_txt.includes("12:00:00"));
   return noon || items[Math.floor(items.length / 2)];
 }
@@ -188,8 +179,7 @@ function classifyBg(main) {
   if (m.includes("snow")) return "bg-snow";
   if (m.includes("thunder")) return "bg-thunder";
   if (m.includes("drizzle")) return "bg-drizzle";
-  if (m.includes("mist") || m.includes("fog") || m.includes("haze"))
-    return "bg-mist";
+  if (m.includes("mist") || m.includes("fog") || m.includes("haze")) return "bg-mist";
   if (m.includes("cloud")) return "bg-clouds";
   return "bg-default";
 }
@@ -205,13 +195,12 @@ function makeIconUrl(icon) {
 
 function renderDays(cityName, data, lang) {
   daysEl.innerHTML = "";
-
   if (!data || !data.list) {
     daysEl.innerHTML = `<p>Немає даних.</p>`;
     return;
   }
   const byDay = groupByDay(data.list);
-  const dates = Object.keys(byDay).slice(0, 5); // 5 днів
+  const dates = Object.keys(byDay).slice(0, 5);
 
   dates.forEach((date) => {
     const items = byDay[date];
@@ -239,12 +228,10 @@ function renderDays(cityName, data, lang) {
           </div>
           <img src="${makeIconUrl(icon)}" alt="${desc}" width="64" height="64" />
         </div>
-
         <div class="day__temp">
           <div class="now">${now}°</div>
           <div class="minmax">${tmin}° / ${tmax}°</div>
         </div>
-
         <div class="day__meta">
           <div>💨 ${wind} м/с</div>
           <div>💧 ${humidity}%</div>
@@ -273,13 +260,15 @@ async function onSearch() {
     url.searchParams.set("lang", lang);
 
     const res = await fetch(url);
-    if (!res.ok) throw new Error("Forecast error");
+    if (!res.ok) throw new Error("Forecast API failed");
     const data = await res.json();
-
     renderDays(place.name, data, lang);
-  } catch (e) {
-    daysEl.innerHTML = `<p style="color:#fca5a5">Помилка: ${e.message || e}</p>`;
+  } catch (err) {
+    daysEl.innerHTML = `<p>${err.message}</p>`;
   }
 }
 
 searchBtn.addEventListener("click", onSearch);
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") onSearch();
+});
