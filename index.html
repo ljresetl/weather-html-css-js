@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Fullstack Developer</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <meta name="description" content="Fullstack Developer створюю сучасні сайти, адаптовані під всі пристрої. Не використовую margin i padding, 
+            тільки flex-box i grid.">
+  </head>
+  <body>
+    <header class="section-header">
+      <!-- Логотип + текст FullStack -->
+      <div class="container container-header">
+        <div class="logo">
+          <button
+            type="button"
+            class="main-logo-button-svg"
+            title="logo"
+            id="buttonlogo"
+            aria-label="buttonlogo"
+          >
+            <svg class="svg-logo" alt="I.A.F"  width="40" height="40">
+              <use class="svg-logo-use" href="./images/icons.svg#icon-log0-fullstack"></use>
+            </svg>
+            
+          </button>
+          <a href="./index.html" class="main-logo-text"></a>
+        </div>
+
+        <!-- Навігація -->
+        <nav class="menu">
+          <ul class="menu-list">
+            <li><a href="#" class="menu-link show-resume">Резюме</a></li>
+            <li><a href="#skills" class="menu-link">Навички</a></li>
+            <li><a href="#my-work" class="menu-link">Мої роботи</a></li>
+            <li><a href="#figma" class="menu-link">Макети фігма</a></li>
+            <!-- <li><a href="#figma-desinge" class="menu-link">Дизайнер</a></li> -->
+            <li><a href="#telefon-mail" class="menu-link">Звязок</a></li>
+          </ul>
+        </nav>
+<!-- кнопка зворотного звязку -->
+        <button type="button" class="one-button">Зворотній зв'язок</button>
+
+        <!-- Кнопки входу -->
+        <!-- <div class="auth-buttons">
+          <button type="button" class="sign-in" aria-label="sign-in">
+            Sign In
+          </button>
+          <button type="button" class="sign-up" aria-label="sign-up">
+            Sign Up
+          </button>
+        </div> -->
+        <!-- Бургер-меню -->
+        <button
+          type="button"
+          class="burger-menu"
+          title="burger"
+          id="button-burger"
+          aria-label="button-burger"
+        >
+          <svg class="burger-menu-icon" width="28" height="31">
+            <use href="./images/icons.svg#burger-menu"></use>
+          </svg>
+        </button>
+      </div>
+
+
+
+    <!-- Мобільне меню -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <!-- Додано накладку -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-btn">
+        <button
+          type="button"
+          class="close-mobile-menu"
+          id="closeMobileMenu"
+          aria-label="mobile-menu-btn"
+        >
+          <svg width="24" height="24">
+            <use
+              href="./images/icons.svg#icon-close"
+              width="12"
+              heigth="12"
+            ></use>
+          </svg>
+        </button>
+      </div>
+  <div class="mobile-full-item">
+    
+              <ul class="mobile-menu-list">
+                <li><a href="index.html" class="mobile-menu-link">Fullstack</a></li>
+                <li><a href="#" class="menu-link mobile-menu-link-resume show-resume">Резюме</a></li>
+                <li><a href="#skills" class="mobile-menu-link">Навички</a></li>
+                <li><a href="#my-work" class="mobile-menu-link">Мої роботи</a></li>
+                <li><a href="#figma" class="mobile-menu-link">Макети фігма</a></li>
+                <li><a href="#figma-desinge" class="mobile-menu-link">Дизайнер</a></li>
+                <li><a href="#telefon-mail" class="mobile-menu-link">Звязок</a></li>
+              </ul>
+        
+  
+    <ul class="mobile-menu-social-list">
+                <li class="mobile-menu-social-iteam">
+                    <a href="https://www.instagram.com/ljresetl/" class="mobile-menu-social-link" aria-label="Instagram">
+                        <svg class="social-icon" width="24" height="24">
+                            <use href="./images/icons.svg#icon-icons8-instagram-2"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="mobile-menu-social-iteam">
+                    <a href="https://www.facebook.com/vitalii.baranov.35/" class="mobile-menu-social-link" aria-label="facebook">
+                        <svg class="social-icon" width="24" height="24">
+                            <use href="./images/icons.svg#icon-icons8-facebook"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="mobile-menu-social-iteam">
+                    <a href="https://t.me/ljresetl" class="mobile-menu-social-link" aria-label="telegram">
+                        <svg class="social-icon" width="24" height="24">
+                            <use href="./images/icons.svg#icon-icons8telegram"></use>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+  
+  </div>
+    </div>
+
+    <!-- Підключення JS -->
+    <script src="script.js" defer></script>
+    </header>
+    <main>
+      <section class="main-foto">
+        <div class="container container-main-foto">
+          <h1 class="main-foto-h">Fullstack Developer</h1>
+        </div>
+      </section>
+
+      <section class="section-one">
+        <div class="container container-section-one">
+          <div class="container-section-one-div-h">
+            <h2 class="container-section-one-h">
+              Привіт! Я — починаючий Fullstack Developer, що створює сучасні, адаптивні 
+              та функціональні вебсайти. Верстаю з макетів Figma, дотримуюсь принципів mobile-first
+               і прагну до найкращих практик у веброзробці. Пишу чистий, семантичний HTML та структурований,
+                кросбраузерний CSS, з особливою увагою до деталей та зручності користувача.
+
+              Активно розвиваю свої навички у JavaScript, вивчаю сучасні фреймворки та бібліотеки 
+              (зокрема React) для створення динамічних та інтерактивних інтерфейсів.
+              
+              Моя мета — створювати вебпродукти, які приносять реальну цінність бізнесу та користувачам.  
+              Шукаю можливості для реальних проєктів, співпраці або стажування, щоб поглибити практичні знання та 
+              долучитись до професійної спільноти розробників.</h2>
+          </div>
+<div class="one-section-image-container">
+
+            <picture class="tablet-desktop-only">
+              <!-- Десктопна версія -->
+              <source
+                srcset="./images/futurism-perspective-digital-nomads-lifestyle.jpg 2x"
+                media="(min-width: 1004px)"
+                width="1004"
+              height="630"
+              />
+              <!-- Планшетна версія -->
+              <!-- <source
+                srcset="./images/main-first690-one-foto.png 1x, 
+                        ./images/main-first690-one-foto2x.png 2x"
+                media="(min-width: 690px)"
+              /> -->
+              <!-- Мобільна версія або fallback -->
+              <img
+              src="./images/futurism-perspective-digital-nom411x258.jpg"
+              alt="Amico Image"
+              width="500"
+              height="310"
+            />
+            </picture>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-two">
+        <div class="container container-section-two">
+          <div class="container-section-two-text">
+            <h2 class="container-section-two-h">Про мене</h2>
+            <p class="container-section-two-p">
+              Мене звати Віталій. Я навчаюся на курсах Fullstack Developer і вже створюю адаптивні сайти, що чудово працюють на всіх пристроях. Використовую сучасний підхід — Flexbox і CSS Grid, мінімізуючи margin і padding. Впевнено верстаю з Figma з піксельною точністю, дотримуюсь mobile-first, семантики та чистого коду. Добре знаю HTML і CSS, активно вивчаю JavaScript і бекенд. Мета — стати універсальним розробником, який створює швидкі, зручні й привабливі продукти.
+            </p>
+          </div>
+        <div class="two-section-image-container">
+
+          <picture class="tablet-desktop-only">
+            <!-- Десктопна версія -->
+            <source
+              srcset="./images/3d-rendering-blockchain-technology.jpg 2x"
+              media="(min-width: 1004px)"
+              
+            />
+            <!-- Планшетна версія -->
+            <!-- <source
+              srcset="./images/main-first690-one-foto.png 1x, 
+                      ./images/main-first690-one-foto2x.png 2x"
+              media="(min-width: 690px)"
+            /> -->
+            <!-- Мобільна версія або fallback -->
+            <img
+              src="./images/3d-rendering-blockchain-technolo411x312.jpg"
+              alt="Amico Image"
+              width="500"
+              height="310"
+            />
+          </picture>
+
+
+          </div>
+        </div>
+      </section>
+
+      <section class="section-three" id="skills">
+        <div class="container container-section-three">
+          <div class="section-three-skills">
+            <h2 class="container-section-three-h">Навички</h2>
+          
+            <div class="container-section-three-ul-all">
+              <div>
+                <p class="container-section-three-p">Фронтенд:</p>
+                <ul class="container-section-three-ul">
+                  <li class="container-section-three-li">
+                    HTML — семантична, чиста розмітка.
+                  </li>
+                  <li class="container-section-three-li">
+                    CSS — адаптивна верстка з Flexbox та Grid.
+                  </li>
+                  <li class="container-section-three-li">
+                    JavaScript — додаю логіку та динаміку на сторінки.
+                  </li>
+                  <li class="container-section-three-li">
+                    Figma — верстаю точно з макетів.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          
+            <div class="container-section-three-ul-two">
+              <p class="container-section-three-p">Інструменти:</p>
+              <ul class="container-section-three-ul">
+                <li class="container-section-three-li">
+                  Git — контроль версій.
+                </li>
+                <li class="container-section-three-li">
+                  GitHub — хостинг і спільна робота.
+                </li>
+                <li class="container-section-three-li">
+                  VS Code — зручний редактор коду.
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          
+                    <div class="three-section-image-container">
+
+                      <picture class="tablet-desktop-only">
+                        <!-- Десктопна версія -->
+                        <source
+                          srcset="./images/3d-shapes-glowing-with-bright-holographic-colors.jpg 2x"
+                          media="(min-width: 1004px)"
+                        />
+                        <!-- Планшетна версія -->
+                        <!-- <source
+                          srcset="./images/main-first690-one-foto.png 1x, 
+                                  ./images/main-first690-one-foto2x.png 2x"
+                          media="(min-width: 690px)"
+                        /> -->
+                        <!-- Мобільна версія або fallback -->
+                        <img
+                        src="./images/3d-shapes-glowing-with-bright-ho411x734.jpg"
+                        alt="Amico Image"
+                        width="500"
+                        height="310"
+                      />
+                      </picture>
+
+
+          </div>
+        </div>
+      </section>
+
+      <section class="section-four" id="my-work">
+        <div class="container container-section-four">
+          <h2 class="container-section-four-h">Мої роботи</h2>
+          <div class="container-section-four-scroll-wrapper" id="projects-container">
+            <div class="container-section-four-ul-all">
+
+
+              <div class="container-section-four-ul-project">
+              
+                <h3 class="project-list-h3">Financial Consulting</h3>
+               <p class="project-list-p-opis">
+      Опис: 
+      <a href="https://ljresetl.github.io/financial_consulting/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+      та посиланням на сам макет: - Зроблено без макету!
+      <!-- <a href="https://www.figma.com/design/KBK97RnaJsjnIkg8NcIBqy/%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9-%D0%91%D0%B0%D1%80%D0%B0%D0%BD%D0%BE%D0%B2?node-id=0-3&t=lC3lgO9pHupS6FTx-0">макет Figma</span></a>. -->
+    </p>
+    <div class="four-section-image-container">
+                <img
+                  src="./images/foto1.png"
+                  alt="Amico Image"
+                  width="500"
+                  height="310"
+                />
+              </div>
+    <p class="container-section-four-p">Технології:</p>
+                <div>
+                  <ul class="container-section-four-ul">
+                    <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">JavaScript - частково;</li>
+                      <a class="container-section-four-a" href="https://github.com/ljresetl/financial_consulting" target="_blank">GitHub - Посилання на репозиторій</a>
+                  </ul>
+                </div> 
+            
+          </div>
+
+
+                <div class="container-section-four-ul-project">
+              
+                <h3 class="project-list-h3">Назва проекту - Фільми</h3>
+               <p class="project-list-p-opis">
+      Опис: 
+      <a href="https://ljresetl.github.io/kino2/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+      та посиланням на сам макет: - Зроблено без макету!
+      <!-- <a href="https://www.figma.com/design/KBK97RnaJsjnIkg8NcIBqy/%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9-%D0%91%D0%B0%D1%80%D0%B0%D0%BD%D0%BE%D0%B2?node-id=0-3&t=lC3lgO9pHupS6FTx-0">макет Figma</span></a>. -->
+    </p>
+    <div class="four-section-image-container">
+                <img
+                  src="./images/kino411.png"
+                  alt="Amico Image"
+                  width="500"
+                  height="310"
+                />
+              </div>
+    <p class="container-section-four-p">Технології:</p>
+                <div>
+                  <ul class="container-section-four-ul">
+                    <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">JavaScript - частково;</li>
+                      <a class="container-section-four-a" href="https://github.com/ljresetl/kino2" target="_blank">GitHub - Посилання на репозиторій</a>
+                  </ul>
+                </div> 
+            
+          </div>
+
+              <!-- <div class="container-section-four-ul-project">
+              
+                <h3 class="project-list-h3">Назва проекту - Neway-Grup</h3>
+               <p class="project-list-p-opis">
+      Опис: 
+      <a href="https://ljresetl.github.io/Neway-Grup/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+      та посиланням на сам макет: 
+      <a href="https://www.figma.com/design/KBK97RnaJsjnIkg8NcIBqy/%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9-%D0%91%D0%B0%D1%80%D0%B0%D0%BD%D0%BE%D0%B2?node-id=0-3&t=lC3lgO9pHupS6FTx-0">макет Figma</span></a>.
+    </p>
+    <div class="four-section-image-container">
+                <img
+                  src="./images/new-grup411.png"
+                  alt="Amico Image"
+                  width="500"
+                  height="310"
+                />
+              </div>
+    <p class="container-section-four-p">Технології:</p>
+                <div>
+                  <ul class="container-section-four-ul">
+                    <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">JavaScript - частково;</li>
+                      <a class="container-section-four-a" href="https://github.com/ljresetl/Neway-Grup" target="_blank">GitHub - Посилання на репозиторій</a>
+                  </ul>
+                </div> 
+            
+          </div> -->
+
+            <div class="container-section-four-ul-project">
+              
+                  <h3 class="project-list-h3">Назва проекту - Барбершоп</h3>
+                 <p class="project-list-p-opis">
+        Опис: 
+        <a href="https://ljresetl.github.io/barbershop/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+        та посиланням на сам макет: 
+        <a href="https://www.figma.com/design/8rFYb4fnrKQ9oa6EWtZx30/Landing-page---%D0%91%D0%B0%D1%80%D0%B1%D0%B5%D1%80%D1%88%D0%BE%D0%BF--Copy-?node-id=1374-32&t=gtAhvALMimzaZmga-0">макет Figma</span></a>.
+      </p>
+      <div class="four-section-image-container">
+                  <img
+                    src="./images/priklad3-411x350.png"
+                    alt="Amico Image"
+                    width="500"
+                    height="310"
+                  />
+                </div>
+      <p class="container-section-four-p">Технології:</p>
+                  <div>
+                    <ul class="container-section-four-ul">
+                      <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                      <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                      <li class="container-section-four-li">JavaScript - Зроблено на високому рівні;</li>
+                        <a class="container-section-four-a" href="https://ljresetl.github.io/barbershop/" target="_blank">GitHub - Посилання на репозиторій</a>
+                    </ul>
+                  </div> 
+              
+            </div>
+           
+  
+  
+            <div class="container-section-four-ul-project">
+              <h3 class="project-list-h3">Назва проекту - PRODUCT</h3>
+             <p class="project-list-p-opis">
+    Опис: 
+    <a href="https://ljresetl.github.io/PRODUCT-business/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/CCjccFZI3jmjWZXlj1L3FL/Business-promotion--practice---Copy-?node-id=0-1&p=f&t=JOs5gpU9hrLargYf-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="four-section-image-container">
+              <img
+                src="./images/maket1(411).png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+              />
+            </div>
+  <p class="container-section-four-p">Технології:</p>
+              <div>
+                <ul class="container-section-four-ul">
+                  <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                  <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                  <li class="container-section-four-li">JavaScript - Зроблено на високому рівні;</li>
+                    <a class="container-section-four-a" href="https://github.com/ljresetl/PRODUCT-business" target="_blank">GitHub - Посилання на репозиторій</a>
+                </ul>
+              </div> 
+          
+          </div>
+  
+                
+             <div class="container-section-four-ul-project">
+                <h3 class="project-list-h3">Назва проекту - Webstudio</h3>
+               <p class="project-list-p-opis">
+      Опис: 
+      <a href="https://ljresetl.github.io/goit-markup-hw-06/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+      та посиланням на сам макет: 
+      <a href="https://www.figma.com/design/TYcWnjByTKMtcC1L8jxqL7/Web-Studio--Version-5.0---Copy-?node-id=297046-1554&p=f&t=z4o51AcTlESc5X8L-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+    </p>
+    <div class="four-section-image-container">
+                <img
+                  src="./images/Snímek obrazovky411x213.png"
+                  alt="Amico Image"
+                  width="500"
+                  height="310"
+                  
+                />
+              </div>
+    <p class="container-section-four-p">Технології:</p>
+                <div>
+                  <ul class="container-section-four-ul">
+                    <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">JavaScript - Зроблено на високому рівні;</li>
+                      <a class="container-section-four-a" href="https://github.com/ljresetl/goit-markup-hw-06" target="_blank">GitHub - Посилання на репозиторій</a>
+                  </ul>
+                </div> 
+      
+             </div>
+             <div class="container-section-four-ul-project">
+                <h3 class="project-list-h3">Назва проекту - yachtjet</h3>
+               <p class="project-list-p-opis">
+      Опис: 
+      <a href="https://ljresetl.github.io/team-work-yachtjet/" target="_blank" class="container-section-four-figma"><span class="container-section-four-figma-www">->>сайт з адаптивною версткою</span></a> з макету Figma
+      та посиланням на сам макет: 
+      <a href="https://www.figma.com/design/00GIbmWDVxCswcbP7nz0VE/YachtJet--Copy-?node-id=0-1&p=f&t=hRAGDTsc9DN3XSdd-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+    </p>
+    <div class="four-section-image-container">
+                <img
+                  src="./images/projekt411x266.png"
+                  alt="Amico Image"
+                  width="500"
+                  height="310"
+                  
+                />
+              </div>
+    <p class="container-section-four-p">Технології:</p>
+                <div>
+                  <ul class="container-section-four-ul">
+                    <li class="container-section-four-li">HTML - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">CSS - Зроблено на високому рівні;</li>
+                    <li class="container-section-four-li">JavaScript - Зроблено на високому рівні;</li>
+                      <a class="container-section-four-a" href="https://github.com/ljresetl/team-work-yachtjet" target="_blank">GitHub - Посилання на репозиторій</a>
+                  </ul>
+                </div> 
+              </div>
+              <!-- <button class="scroll-next-btn" id="scrollNextBtn" aria-label="Наступні проєкти">→</button> -->
+             </div>
+          </div>
+        </div>
+      </section>
+
+     <section class="section-five" id="figma">
+        <div class="container container-section-five">
+          <h2 class="container-section-five-h2">Макети фігма</h2>
+          <div class="container-section-five-ul-all">
+            <div class="project-item">
+              <h3 class="container-section-five-h3">IT технології</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/J8U5uYNAbl5BaljcWKVDEM/Landing-page---%D0%9F%D0%9E?node-id=0-1&p=f&t=o2g1etiaRg0wLyfE-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/IT-teh411x296.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 150$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>
+              
+          <div class="project-item">
+              <h3 class="container-section-five-h3">Landing page: Apps</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/Y8JxJsHmJXZFjHxf63VaPk/Landing-page---%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9?node-id=0-1&p=f&t=fC9FLR82agYKmPKx-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad2-411x410.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 100$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>
+  
+           <div class="project-item">
+              <h3 class="container-section-five-h3">Барбершоп</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/9LWJHlYynZbRLEgurauIwY/Landing-page---%D0%91%D0%B0%D1%80%D0%B1%D0%B5%D1%80%D1%88%D0%BE%D0%BF?node-id=0-1&p=f&t=fYoeELnYXLnRwdsa-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad3-411x350.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 150$</li>
+                  <li class="container-section-five-li">Дескоптна версія + планшет + мобільний</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>
+  
+            <div class="project-item">
+              <h3 class="container-section-five-h3">Масло</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/8iy2KG1P1BHXO7UqibF4Ym/Landing-page---%D0%9C%D0%B0%D1%81%D0%BB%D0%BE?node-id=0-1&p=f&t=bDUpXLWXe3OfJQC1-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad4-411x600.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 100$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>
+
+ <div class="project-item">
+              <h3 class="container-section-five-h3">Landing page: Взуття</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/N7GDc6H3UfuQnaCm7wOm0o/Landing-page---%D0%9E%D0%B1%D1%83%D0%B2%D1%8C--Copy-?node-id=0-1&p=f&t=kDUB7Kp9KvZ0lHpF-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad5-411px.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page - одяг і аксессуари</li>
+                  <li class="container-section-five-li">Ціна верстки: 200$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>
+            
+            
+ <div class="project-item">
+              <h3 class="container-section-five-h3">Landing page: Духовний вчитель</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/cWUcGkBNDGn432tX9BLz0J/Landing-page---%D0%94%D1%83%D1%85%D0%BE%D0%B2%D0%BD%D1%8B%D0%B5-%D0%BD%D0%B0%D1%81%D1%82%D0%B0%D0%B2%D0%BD%D0%B8%D0%BA%D0%B8--Copy-?node-id=0-1&p=f&t=1b8SgDPuzMBhNIdb-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad6-411x482.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 100$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>
+
+
+ <div class="project-item">
+              <h3 class="container-section-five-h3">Landing page: Станок для бриття</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/yUqenkqRD8f6uu1wBDMkqI/Landing-page---%D0%91%D1%80%D0%B8%D1%82%D0%B2%D0%B0--Copy-?m=auto&fuid=1437929401587552520" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad7-411x279.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 150$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>            
+
+<div class="project-item">
+              <h3 class="container-section-five-h3">Landing page: Крипто-гаманець</h3>
+              <p class="container-section-five-opis">Опис: сайт з дескоптною версією з макету Figma
+    та посиланням на сам макет: 
+    <a href="https://www.figma.com/design/TRa5bdXdrVS6G69YHCSnWf/Landing-page---%D0%9A%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%BA%D0%BE%D1%88%D0%B5%D0%BB%D0%B5%D0%BA--Copy-?node-id=0-1&p=f&t=l0tn9vtORK5BE3Zk-0" target="_blank" class="maket-figma"> <span class="container-section-four-figma-www">макет Figma</span></a>.
+  </p>
+  <div class="five-section-image-container">
+              <img
+                src="./images/priklad8-411x364.png"
+                alt="Amico Image"
+                width="500"
+                height="310"
+                class="img-section-five"
+              />
+            </div>
+<div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">Формат сайта: Landing page</li>
+                  <li class="container-section-five-li">Ціна верстки: 300$</li>
+                  <li class="container-section-five-li">Дескоптна версія</li>
+                </ul>
+              </div>
+
+              <p class="container-section-five-teh">Технології:</p>
+              <div class="five-section-ul">
+                <ul class="container-section-five-ul">
+                  <li class="container-section-five-li">HTML</li>
+                  <li class="container-section-five-li">CSS</li>
+                  <li class="container-section-five-li">JavaScript</li>
+                  <li class="container-section-five-li">GitHub</li>
+                </ul>
+              </div>
+            </div>          
+          </div>
+          <button type="button" class="load-more-btn" id="load-more-btn">Показати ще</button>
+        </div>
+      </section>
+
+      <!-- <section class="section-designer" id="figma-desinge">
+        <div class="container container-section-designer">
+          <h2>Займаюсь професійним верстанням сайтів під ключ — адаптивно, швидко та якісно. Верстаю з макетів Figma, створюю зручні та сучасні інтерфейси. Якщо вам потрібен сайт, який виглядає ідеально на всіх пристроях і приносить результат — звертайтесь. Я допоможу втілити ваш дизайн у живий, працюючий сайт за справедливу оплату.</h2>
+        </div>
+      </section> -->
+    </main>
+
+    <footer class="section-fouter" id="telefon-mail">
+      <div class="container container-section-fouter">
+        <div class="container-section-fouter-contact">
+          <h2 class="container-section-fouter-h">Контакти</h2>
+  <a href="https://www.linkedin.com/in/vitalii-baranov-222439377/" target="_blank" class="fouter-a">linkedin</a>
+          <a href="mailto:ljresetl@gmail.com" target="_blank" class="fouter-a">ljresetl@gmail.com</a>
+          <a href="https://t.me/ljresetl" target="_blank" class="fouter-a">t.me/ljresetl</a>
+          <a href="https://github.com/ljresetl " target="_blank" class="fouter-a">github.com/ljresetl</a>
+  
+        </div>
+        <div class="social-media">
+          <p class="social-title">Social media</p>
+          <ul class="social-icons-two">
+            <li class="foter-spisok">
+              <a href="https://www.instagram.com/ljresetl/" target="_blank" class="ahref-two" aria-label="instagram">
+                <svg class="social-icon-footer" width="24" height="24">
+                  <use href="./images/icons.svg#icon-icons8-instagram-2" />
+                </svg>
+              </a>
+            </li>
+            <li class="foter-spisok">
+              <a href="https://www.facebook.com/vitalii.baranov.35/" target="_blank" class="ahref-two" aria-label="facebook">
+                <svg class="social-icon-footer" width="24" height="24">
+                  <use href="./images/icons.svg#icon-icons8-facebook" />
+                </svg>
+              </a>
+            </li>
+            <li class="foter-spisok">
+              <a href="https://t.me/ljresetl" class="ahref-two" target="_blank" aria-label="telegram">
+                <svg class="social-icon-footer" width="24" height="24">
+                  <use href="./images/icons.svg#icon-icons8telegram" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- <div class="footer-subscribe">
+          <p class="text-subscribe">Subscribe</p>
+          <div>
+            <form class="email-footer">
+              <label class="footer-label" for="email">
+                <input
+                  type="email"
+                  class="form-input-footer"
+                  name="email"
+                  id="email"
+                  placeholder="E-mail"
+                />
+              </label>
+            </form>
+          </div>
+
+            <div class="btn-footer-div">
+              <button class="btn-footer" type="submit">
+                Subscribe
+                <svg class="icon-footer" width="24" height="24">
+                  <use href="./images/icons.svg#icon-icon-send" />
+                </svg>
+              </button>
+            </div>
+          
+        </div> -->
+      </div>
+    </footer>
+  </main>
+<!-- резюме -->
+  <div class="resume" id="resume">
+      <div class="resume-on">
+        <h2 class="resume-h">Резюме</h2>
+      
+        <h2 class="resume-hh">Баранов Віталій</h2>
+        <p class="resume-p"><strong>Посада:</strong> Front-End Developer</p>
+      
+        <h3 class="resume-hhh">Контактна інформація:</h3>
+        <ul class="resume-ul">
+          <li><strong>Телефон:</strong> +420-774-974-031</li>
+          <li><strong>Email:</strong> ljresetl@gmail.com</li>
+          <li><strong>Портфоліо:</strong> <a href="#my-work" target="_blank">https://ljresetl.github.io/portfolio/</a></li>
+          <li><strong>GitHub:</strong> <a href="https://github.com/ljresetl" target="_blank">github.com/ljresetl</a></li>
+          <li><strong>Місто:</strong> Ліберець, Чехія</li>
+        </ul>
+
+        <h3 class="resume-hhh">Минуле місце роботи</h3>
+      <p class="resume-p">Досвід роботи
+Оператор виробництва → Працівник підготовки матеріалів
+Magna Bohemia s.r.o., Чехія
+2019 — дотепер
+
+Почав працювати оператором через агентство
+
+З кінця 2019 року — офіційне працевлаштування напряму на завод
+
+З 2023 — підвищення: позиція працівника з підготовки матеріалів для виробництва
+
+Робота в міжнародному середовищі, комунікація чеською мовою
+
+Відповідальність, точність, дотримання термінів
+
+Монтажник супутникового телебачення (Україна)
+до 2019 року
+
+Повний цикл встановлення супутникового телебачення: від монтажу до налаштування
+
+Самостійна робота з клієнтами, вирішення технічних питань</p>
+        <h3 class="resume-hhh">Про мене:</h3>
+        <p class="resume-p">Веб-розробник з фокусом на Front-End, з практичним досвідом створення адаптивних, доступних і швидких вебінтерфейсів. Добре володію HTML, CSS, JavaScript. Вмію перетворювати макети з Figma на живі сайти, оптимізовані для користувачів і SEO.</p>
+      
+        <h3 class="resume-hhh">Навички:</h3>
+        <ul class="resume-ul">
+          <li><strong>Мови:</strong> HTML5, CSS3, JavaScript (ES6+)</li>
+          <li><strong>Фреймворки:</strong> React, Tailwind CSS, Sass - в процесі навчання</li>
+          <li><strong>Інструменти:</strong> Git, VS Code, Figma</li>
+          <li><strong>Інше:</strong> адаптивна верстка (mobile-first), доступність, SEO-оптимізація</li>
+        </ul>
+      
+        <h3 class="resume-hhh">Досвід роботи:</h3>
+        <p class="resume-p"><strong>Фріланс — Front-End Developer</strong><br>
+        <em>Лютий 2024 — теперішній час</em><br>
+        - Верстав сайти з макетів Figma (лендінги, портфоліо, блоги)<br>
+        - Реалізовував інтерактивні компоненти з чистого JS<br>
+        </p>
+      
+        <h3 class="resume-hhh">Освіта:</h3>
+        <p class="resume-p"><strong>Онлайн-курс "Fullstack Developer" — GoIt</strong><br>
+        <em>2024 — зараз навчаюсь</em><br>
+        Навчання front-end та базовий back-end: HTML, CSS, JavaScript, Node.js, MongoDB</p>
+        <p class="resume-p"><strong>ЧНУ імені Богдана Хмельницького</strong><br>
+          <em>2007-2012</em><br>
+          Інженер компьютерно-інтегрованих технологічних процесів і виробництва</p>
+        <h3 class="resume-hhh">Проєкти:</h3>
+        <ul class="resume-ul">
+          <li><strong>Портфоліо:</strong> персональний сайт з інтерактивним дизайном</li>
+          <li><strong>Форма з валідацією:</strong> чистий JS, SVG-іконки, адаптивність</li>
+          <li><strong>Мобільне меню з підменю:</strong> JS логіка та ефекти</li>
+        </ul>
+      
+        <h3 class="resume-hhh">Мови:</h3>
+        <ul class="resume-ul">
+          <li>Українська — рідна</li>
+          <li>Чеська — середній рівень</li>
+          <li>Англійська — середній рівень(не розмовний) (Intermediate)</li>
+        </ul>
+      
+        <h3 class="resume-hhh">Ціль:</h3>
+        <p class="resume-p">Отримати позицію Junior Frontend Developer, щоб реалізувати свої навички в розробці вебсайтів та продовжити професійний розвиток у сфері ІТ. Маю реальний досвід верстки з макетів Figma, швидко навчаюсь і цілеспрямовано рухаюсь у напрямку повноцінного фулстек-розробника.</p>
+      </div>
+  </div>
+
+  <!-- кнопка зворотного звязку -->
+  <div class="modal-overlay">
+    <div class="modal">
+
+        <button type="button" class="modal-close">
+            <svg class="button-svg" width="8" height="8">
+                <use href="./images/icons.svg#icon-close-black"></use>
+            </svg>
+        </button>
+        <p class="modal-title">Залиш свої контакти і ми з вами обов'язково зв'яжемось</p>
+
+
+        
+
+        <form action="https://formspree.io/f/mzzggoog"
+        method="POST" class="modal-form">
+
+            <div class="input-wrapper">
+                <label class="modal-label" for="user-name">Ім'я</label>
+                <div class="div-input-icon">
+
+                    <input type="text" name="user-name" id="user-name" class="modal-input">
+                    <svg class="input-icon" width="18" height="24">
+                        <use href="./images/icons.svg#icon-person-black"></use>
+                    </svg>
+                </div>
+            </div>
+
+
+            <div class="input-wrapper">
+                <label class="modal-label" for="phone">Номер телефону</label>
+                <div class="div-input-icon">
+
+                    <input type="tel" name="phone" id="phone" class="modal-input">
+                    <svg class="input-icon" width="18" height="24">
+                        <use href="./images/icons.svg#icon-phone-black"></use>
+                    </svg>
+                </div>
+            </div>
+
+
+            <div class="input-wrapper">
+                <label class="modal-label" for="Email">Email</label>
+                <div class="div-input-icon">
+
+                    <input type="email" name="Email" id="Email" class="modal-input">
+                    <svg class="input-icon" width="18" height="24">
+                        <use href="./images/icons.svg#icon-email-black"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="div-comment">
+
+                <label class="modal-label" for="user-comment">Коментар</label>
+                <textarea id="user-comment" name="user-comment" class="modal-textarea"
+                    placeholder="Text input"></textarea>
+
+
+            </div>
+            <div class="checkbox-wrapper">
+              <!-- <input type="checkbox" id="privacyPolicy" name="user-privacy" class="input-check visually-hidden" value="true"> -->
+
+                <input type="checkbox" id="user-privacy" name="user-privacy" class="input-check visually-hidden"
+                    value="true">
+                <label class="modal-checkbox-label" for="user-privacy">
+                    <span class="label-span">
+                        <svg class="icon-vector" width="10" height="8">
+                            <use href="./images/icons.svg#icon-vector"></use>
+                        </svg>
+                    </span>I accept the terms and conditions of the
+                    <a href="#"  class="privacy-policy">Privacy Policy</a>
+                </label>
+            </div>
+
+
+
+            <!-- <div class="g-recaptcha" data-sitekey="6LdbG2QrAAAAABoh7mk2Jn3eP_y_82uK7rzqQtoc"></div> -->
+            <button type="submit" class="modal-button">Send</button>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- кнопка прокрутки -->
+   <div class="scroll-buttons">
+  <button id="to-top" class="scroll-btn" aria-label="Scroll to top">
+    ↑
+  </button>
+</div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </body>
+</html>
