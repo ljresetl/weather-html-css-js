@@ -2,10 +2,11 @@
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-const API_KEY = window.OWM_API_KEY;
+const API_KEY = window.OWM_API_KEY; // з index.html
 const GEO_URL = "https://api.openweathermap.org/geo/1.0/direct";
 const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
 
+// normalize for startsWith across diacritics
 const removeDiacritics = (s) =>
   (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -15,20 +16,23 @@ const startsWithLocale = (name, query, lang) => {
   return a.startsWith(b);
 };
 
-let citiesFallback = [];
-let selectedPlace = null;
+let citiesFallback = []; // офлайн fallback з cities.json
+let selectedPlace = null; // { name, lat, lon, country }
 
+// ======= load fallback once =======
 fetch("cities.json")
   .then((r) => (r.ok ? r.json() : []))
   .then((data) => (citiesFallback = Array.isArray(data) ? data : []))
   .catch(() => {});
 
+// ======= UI refs =======
 const input = $("#cityInput");
 const suggestions = $("#suggestions");
 const langSelect = $("#langSelect");
 const searchBtn = $("#searchBtn");
 const daysEl = $("#weather");
 
+// ======= suggestions flow =======
 async function fetchRemoteSuggestions(q, lang) {
   const url = new URL(GEO_URL);
   url.searchParams.set("q", q);
@@ -56,10 +60,10 @@ async function fetchRemoteSuggestions(q, lang) {
 }
 
 function fetchLocalSuggestions(q, lang) {
-  const key = lang === "uk" ? "name-uk" : lang === "cz" ? "name-cs" : "name-en";
+  const key = lang === "uk" ? "name_uk" : lang === "cz" ? "name_cs" : "name_en";
   return (citiesFallback || [])
     .map((it) => ({
-      name: it[key] || it["name-en"],
+      name: it[key] || it.name_en,
       country: it.country || "",
       lat: null,
       lon: null,
@@ -130,6 +134,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// ======= search flow =======
 async function ensureCoords(placeName, lang) {
   if (selectedPlace && selectedPlace.lat && selectedPlace.lon) {
     return selectedPlace;
@@ -211,4 +216,59 @@ function renderDays(cityName, data, lang) {
 
     const bgClass = classifyBg(main);
 
-    const el = document.create
+    const el = document.createElement("div");
+    el.className = `day ${bgClass}`;
+    el.innerHTML = `
+      <div class="day-overlay"></div>
+      <div class="day-content">
+        <div class="day-top">
+          <div>
+            <div class="day-date">${fmtDate(date, lang)}</div>
+            <div class="day-desc">${desc}</div>
+          </div>
+          <img src="${makeIconUrl(icon)}" alt="${desc}" width="64" height="64" />
+        </div>
+        <div class="day-temp">
+          <div class="now">${now}°</div>
+          <div class="minmax">${tmin}° / ${tmax}°</div>
+        </div>
+        <div class="day-meta">
+          <div>💨 ${wind} м/с</div>
+          <div>💧 ${humidity}%</div>
+        </div>
+      </div>
+    `;
+    daysEl.appendChild(el);
+  });
+}
+
+async function onSearch() {
+  const lang = langSelect.value;
+  const q = input.value.trim();
+  if (!q) {
+    input.focus();
+    return;
+  }
+  daysEl.innerHTML = `<p>Завантаження…</p>`;
+  try {
+    const place = await ensureCoords(q, lang);
+    const url = new URL(FORECAST_URL);
+    url.searchParams.set("lat", place.lat);
+    url.searchParams.set("lon", place.lon);
+    url.searchParams.set("appid", API_KEY);
+    url.searchParams.set("units", "metric");
+    url.searchParams.set("lang", lang);
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Forecast API failed");
+    const data = await res.json();
+    renderDays(place.name, data, lang);
+  } catch (err) {
+    daysEl.innerHTML = `<p>${err.message}</p>`;
+  }
+}
+
+searchBtn.addEventListener("click", onSearch);
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") onSearch();
+});
