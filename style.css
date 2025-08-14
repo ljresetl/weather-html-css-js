@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --bg: #0f172a;
   --card-bg: rgba(255, 255, 255, 0.09);
   --text: #e2e8f0;
@@ -36,7 +36,7 @@ body {
   padding: 0 16px;
 }
 
-.app__title {
+.app-title {
   margin: 0 0 16px;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -51,31 +51,31 @@ body {
   margin-bottom: 22px;
 }
 
-.search__input-wrap {
+.search-input-wrap {
   position: relative;
   flex: 1 1 360px;
   min-width: 260px;
 }
 
-.search__input {
+.search-input {
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) inset;
+  box-shadow: inset 0 8px 24px rgba(0, 0, 0, 0.25);
   color: var(--text);
   outline: none;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-.search__input:focus {
+.search-input:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.25) inset;
+    inset 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
-.search__select {
+.search-select {
   appearance: none;
   padding: 12px 14px;
   border-radius: 12px;
@@ -104,7 +104,7 @@ body {
   filter: brightness(1.05);
 }
 
-/* ===== suggestions under input ===== */
+/* suggestions */
 .suggestions {
   position: absolute;
   top: calc(100% + 6px);
@@ -121,7 +121,7 @@ body {
   backdrop-filter: blur(6px);
 }
 
-.suggestions__item {
+.suggestions-item {
   padding: 10px 12px;
   display: flex;
   justify-content: space-between;
@@ -130,46 +130,40 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.suggestions__item:last-child {
+.suggestions-item:last-child {
   border-bottom: 0;
 }
 
-.suggestions__name {
+.suggestions-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.suggestions__cc {
+.suggestions-cc {
   color: var(--muted);
   font-size: 12px;
 }
 
-/* ===== days grid ===== */
+/* days grid */
 .days {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(
-    1,
-    1fr
-  ); /* мобільні телефони за замовчуванням */
+  grid-template-columns: repeat(1, 1fr);
 }
 
-/* 411px - 600px — 2 картки */
 @media (min-width: 411px) and (max-width: 600px) {
   .days {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* 601px - 768px — 3 картки */
 @media (min-width: 601px) and (max-width: 768px) {
   .days {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* >768px — 4 картки */
 @media (min-width: 769px) {
   .days {
     grid-template-columns: repeat(4, 1fr);
@@ -188,7 +182,7 @@ body {
   background-repeat: no-repeat;
 }
 
-.day__overlay {
+.day-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -198,7 +192,7 @@ body {
   );
 }
 
-.day__content {
+.day-content {
   position: absolute;
   inset: 0;
   display: flex;
@@ -207,47 +201,49 @@ body {
   padding: 14px;
 }
 
-.day__top {
+.day-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
 
-.day__date {
+.day-date {
   font-weight: 600;
 }
 
-.day__desc {
+.day-desc {
   color: var(--muted);
   font-size: 14px;
 }
 
-.day__temp {
+.day-temp {
   display: flex;
   align-items: baseline;
   gap: 10px;
   font-weight: 600;
 }
 
-.day__temp .now {
+.day-temp .now {
   font-size: 42px;
   line-height: 1;
 }
 
-.day__temp .minmax {
+.day-temp .minmax {
   color: var(--muted);
   font-size: 14px;
 }
 
-.day__meta {
+.day-meta {
   display: flex;
   gap: 12px;
   color: var(--muted);
   font-size: 13px;
 }
 
-/* ===== dynamic backgrounds ===== */
+*/
+
+/* backgrounds */
 .bg-sunny {
   background-image: url("https://images.unsplash.com/photo-1501973801540-537f08ccae7b?q=80&w=1600&auto=format&fit=crop");
 }

@@ -12,21 +12,21 @@
   </head>
   <body>
     <div class="app">
-      <h1 class="app__title">Прогноз погоди</h1>
+      <h1 class="app-title">Прогноз погоди</h1>
 
       <div class="search">
-        <div class="search__input-wrap">
+        <div class="search-input-wrap">
           <input
             type="text"
             id="cityInput"
-            class="search__input"
+            class="search-input"
             placeholder="Введіть місто"
             autocomplete="off"
           />
           <div id="suggestions" class="suggestions"></div>
         </div>
 
-        <select id="langSelect" class="search__select" title="Мова">
+        <select id="langSelect" class="search-select" title="Мова">
           <option value="uk">Українська</option>
           <option value="en">English</option>
           <option value="cz">Čeština</option>
@@ -39,7 +39,6 @@
     </div>
 
     <script>
-      // ⛅️ ВАЖЛИВО: твій ключ (ти його вже давав)
       window.OWM_API_KEY = "75fb45190a5b14c47de1c6a53e0ca8ab";
     </script>
     <script src="script.js"></script>
