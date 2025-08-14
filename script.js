@@ -193,6 +193,38 @@ function makeIconUrl(icon) {
   return `https://openweathermap.org/img/wn/${icon}@2x.png`;
 }
 
+// ======= text color based on image =======
+function setTextColorBasedOnImage(imageUrl, selector = '.days') {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = imageUrl;
+
+  img.onload = function () {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const w = canvas.width = 50;
+    const h = canvas.height = 50;
+    ctx.drawImage(img, 0, 0, w, h);
+
+    const data = ctx.getImageData(0, 0, w, h).data;
+    let r, g, b, avg, total = 0;
+
+    for (let i = 0; i < data.length; i += 4) {
+      r = data[i];
+      g = data[i + 1];
+      b = data[i + 2];
+      avg = (r + g + b) / 3;
+      total += avg;
+    }
+
+    const brightness = total / (w * h);
+    const textColor = brightness < 128 ? 'white' : 'black';
+
+    document.querySelector(selector).style.color = textColor;
+  };
+}
+
 function renderDays(cityName, data, lang) {
   daysEl.innerHTML = "";
   if (!data || !data.list) {
@@ -240,6 +272,13 @@ function renderDays(cityName, data, lang) {
     `;
     daysEl.appendChild(el);
   });
+
+  // Встановлюємо колір тексту залежно від головного дня
+  const mainIcon = byDay[Object.keys(byDay)[0]][0].weather?.[0]?.icon;
+  if (mainIcon) {
+    const iconUrl = makeIconUrl(mainIcon);
+    setTextColorBasedOnImage(iconUrl, '.days');
+  }
 }
 
 async function onSearch() {

@@ -11,33 +11,36 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app">
-      <h1 class="app-title">Прогноз погоди</h1>
+    <section class="app-for-weather">
+      <div class="container app-for-weather-container">
+        <h1 class="app-title">Прогноз погоди</h1>
 
-      <div class="search">
-        <div class="search-input-wrap">
-          <input
-            type="text"
-            id="cityInput"
-            class="search-input"
-            placeholder="Введіть місто"
-            autocomplete="off"
-          />
-          <div id="suggestions" class="suggestions"></div>
+        <div class="search">
+          <div class="search-input-wrap">
+            <input
+              type="text"
+              id="cityInput"
+              class="search-input"
+              placeholder="Введіть місто"
+              autocomplete="off"
+            />
+            <div id="suggestions" class="suggestions"></div>
+          </div>
+
+          <div class="search-select-btn">
+            <select id="langSelect" class="search-select" title="Мова">
+              <option value="uk">Українська</option>
+              <option value="en">English</option>
+              <option value="cz">Čeština</option>
+            </select>
+
+            <button id="searchBtn" class="btn">Пошук</button>
+          </div>
         </div>
 
-        <select id="langSelect" class="search-select" title="Мова">
-          <option value="uk">Українська</option>
-          <option value="en">English</option>
-          <option value="cz">Čeština</option>
-        </select>
-
-        <button id="searchBtn" class="btn">Пошук</button>
+        <div id="weather" class="days"></div>
       </div>
-
-      <div id="weather" class="days"></div>
-    </div>
-
+    </section>
     <script>
       window.OWM_API_KEY = "75fb45190a5b14c47de1c6a53e0ca8ab";
     </script>
