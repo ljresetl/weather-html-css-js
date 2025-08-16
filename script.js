@@ -17,13 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let chart;
   let groupedData = {};
   let cities = [];
+  let geoLoaded = false; // прапорець, що геолокація вже завантажена
 
-  // 🔹 Завантаження JSON онлайн
   fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/refs/heads/main/cities.json")
     .then(res => res.json())
     .then(data => { 
       cities = data; 
       console.log("Cities loaded:", cities.length); 
+      getGeolocationWeather();
     })
     .catch(err => console.error("Cannot load cities.json", err));
 
@@ -120,11 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function getWeather() {
-    const city = cityInput.value.trim();
+  async function getWeather(city) {
     if (!city) return;
 
-    // Перевірка, чи місто є у базі
     const cityExists = cities.some(c => 
       c.name.toLowerCase() === city.toLowerCase() ||
       (c.uk && c.uk.toLowerCase() === city.toLowerCase()) ||
@@ -142,19 +141,46 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(url);
       const data = await res.json();
       if (data.cod === "200") {
+        geoLoaded = true; // блокувати геолокацію після ручного пошуку
         renderDays(data);
       } else {
         alert(texts[currentLang].notFound);
-        setTimeout(() => location.reload(), 3000);
       }
     } catch (err) {
       console.error(err);
       alert(texts[currentLang].notFound);
-      setTimeout(() => location.reload(), 3000);
     }
   }
 
-  // 🔹 Автокомпліт без виклику getWeather
+  async function getWeatherByCoords(lat, lon) {
+    if (geoLoaded) return; // не виконувати, якщо вже був ручний пошук
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${currentLang}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.cod === "200") renderDays(data);
+    } catch (err) {
+      console.error("Cannot fetch weather by coordinates:", err);
+    }
+  }
+
+  function getGeolocationWeather() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          console.log("User coordinates:", lat, lon);
+          getWeatherByCoords(lat, lon);
+        },
+        (err) => {
+          console.warn("Geolocation denied or unavailable", err.message);
+        }
+      );
+    }
+  }
+
+  // Автокомпліт
   cityInput.addEventListener("input", () => {
     const val = cityInput.value.toLowerCase();
     autocompleteEl.innerHTML = "";
@@ -171,26 +197,23 @@ document.addEventListener("DOMContentLoaded", () => {
       item.className = "autocomplete-item";
       item.textContent = `${c.name} / ${c.uk || ""} / ${c.cs || ""}, ${c.country}`;
       item.onclick = () => {
-        cityInput.value = c.name;       // вставляємо назву міста
-        autocompleteEl.innerHTML = "";  // ховаємо автокомпліт
-        cityInput.focus();              // залишаємо фокус
+        cityInput.value = c.name;
+        autocompleteEl.innerHTML = "";
+        cityInput.focus();
       };
       autocompleteEl.appendChild(item);
     });
   });
 
-  // Закрити автокомпліт при кліку поза полем
   document.addEventListener("click", e => {
     if (!e.target.closest(".search")) autocompleteEl.innerHTML = "";
   });
 
-  // Пошук по кнопці і Enter
-  searchBtn.onclick = getWeather;
+  searchBtn.onclick = () => getWeather(cityInput.value.trim());
   cityInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") getWeather();
+    if (e.key === "Enter") getWeather(cityInput.value.trim());
   });
 
-  // Зміна мови
   langSelect.onchange = () => { currentLang = langSelect.value; updateTexts(); };
   updateTexts();
 });
