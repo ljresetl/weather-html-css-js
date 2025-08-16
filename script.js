@@ -17,14 +17,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let chart;
   let groupedData = {};
   let cities = [];
-  let geoLoaded = false; // прапорець, що геолокація вже завантажена
+  let selectedIndex = -1;
 
   fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/refs/heads/main/cities.json")
     .then(res => res.json())
     .then(data => { 
       cities = data; 
       console.log("Cities loaded:", cities.length); 
-      getGeolocationWeather();
+      // --- Показуємо Прагу за замовчуванням ---
+      getWeather("Prague");
+      cityInput.value = "Prague";
     })
     .catch(err => console.error("Cannot load cities.json", err));
 
@@ -132,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!cityExists) {
       alert(texts[currentLang].notFound);
-      setTimeout(() => location.reload(), 3000);
       return;
     }
 
@@ -141,8 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(url);
       const data = await res.json();
       if (data.cod === "200") {
-        geoLoaded = true; // блокувати геолокацію після ручного пошуку
         renderDays(data);
+        cityInput.value = data.city?.name || city;
       } else {
         alert(texts[currentLang].notFound);
       }
@@ -152,38 +153,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function getWeatherByCoords(lat, lon) {
-    if (geoLoaded) return; // не виконувати, якщо вже був ручний пошук
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${currentLang}`;
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.cod === "200") renderDays(data);
-    } catch (err) {
-      console.error("Cannot fetch weather by coordinates:", err);
-    }
-  }
-
-  function getGeolocationWeather() {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          console.log("User coordinates:", lat, lon);
-          getWeatherByCoords(lat, lon);
-        },
-        (err) => {
-          console.warn("Geolocation denied or unavailable", err.message);
-        }
-      );
-    }
-  }
-
-  // Автокомпліт
+  // --- Автокомпліт ---
   cityInput.addEventListener("input", () => {
     const val = cityInput.value.toLowerCase();
     autocompleteEl.innerHTML = "";
+    selectedIndex = -1;
     if (!val) return;
 
     const matches = cities.filter(c => 
@@ -203,6 +177,40 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       autocompleteEl.appendChild(item);
     });
+  });
+
+  function updateHighlight(items) {
+    items.forEach((item, idx) => {
+      if (idx === selectedIndex) {
+        item.classList.add("highlight");
+        item.scrollIntoView({ block: "nearest" });
+      } else {
+        item.classList.remove("highlight");
+      }
+    });
+  }
+
+  cityInput.addEventListener("keydown", (e) => {
+    const items = autocompleteEl.querySelectorAll(".autocomplete-item");
+    if (!items.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % items.length;
+      updateHighlight(items);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+      updateHighlight(items);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < items.length) {
+        cityInput.value = items[selectedIndex].textContent.split(",")[0];
+        autocompleteEl.innerHTML = "";
+        selectedIndex = -1;
+      }
+      getWeather(cityInput.value.trim());
+    }
   });
 
   document.addEventListener("click", e => {
