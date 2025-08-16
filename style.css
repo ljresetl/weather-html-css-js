@@ -295,17 +295,17 @@ section {
 @media screen and (min-width: 1280px) {
   .days {
     /* width: 200px; */
-    height: 300px;
+    height: 200px;
     justify-content: space-between;
   }
 
   .day {
     width: 250px;
-    height: 296px;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
+    padding: 10px;
   }
 
   .day-top {
