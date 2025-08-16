@@ -1,13 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const API_KEY = "75fb45190a5b14c47de1c6a53e0ca8ab";
 
   const cityInput = document.getElementById("cityInput");
   const searchBtn = document.getElementById("searchBtn");
   const daysEl = document.getElementById("weather");
-  const ctx = document.getElementById("hourlyChart").getContext("2d");
+  const ctx = document.getElementById("hourlyChart")?.getContext("2d");
   const langSelect = document.getElementById("langSelect");
   const autocompleteEl = document.getElementById("autocomplete");
+
+  if (!cityInput || !searchBtn || !daysEl || !ctx || !langSelect || !autocompleteEl) {
+    console.error("Some elements are missing in the DOM!");
+    return;
+  }
 
   let currentLang = "cs";
   let chart;
@@ -15,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let cities = [];
 
   // 🔹 Завантаження JSON онлайн
-  fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/main/cities.json")
+  fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/refs/heads/main/cities.json")
     .then(res => res.json())
     .then(data => { 
       cities = data; 
@@ -23,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => console.error("Cannot load cities.json", err));
 
-  // Тексти різними мовами
   const texts = {
     cs: { title: "Předpověď počasí", search: "Hledat", placeholder: "Zadejte město", subtitle: "Hodinová předpověď" },
     uk: { title: "Прогноз погоди", search: "Пошук", placeholder: "Введіть місто", subtitle: "Погодинний прогноз" },
@@ -38,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("subtitle").textContent = t.subtitle;
   }
 
-  // Форматування дати
   function fmtDate(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleDateString(currentLang, { weekday: "short", day: "2-digit", month: "short" });
@@ -48,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return `https://openweathermap.org/img/wn/${icon}@2x.png`;
   }
 
-  // Показати дні
   function renderDays(data) {
     daysEl.innerHTML = "";
     groupedData = {};
@@ -128,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (data.cod === "200") renderDays(data);
   }
 
-  // Автопідказки
   cityInput.addEventListener("input", () => {
     const val = cityInput.value.toLowerCase();
     autocompleteEl.innerHTML = "";
@@ -160,5 +160,4 @@ document.addEventListener("DOMContentLoaded", () => {
   searchBtn.onclick = getWeather;
   langSelect.onchange = () => { currentLang = langSelect.value; updateTexts(); };
   updateTexts();
-
 });
