@@ -115,22 +115,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const labels = items.map(i => i.dt_txt.split(" ")[1].slice(0,5));
     const temps = items.map(i => i.main.temp);
 
-    if (chart) {
-      chart.data.labels = labels;
-      chart.data.datasets[0].data = temps;
-      chart.update();
-      return;
-    }
-
+    // Створюємо градієнт заново при кожному оновленні
     const gradient = ctx.createLinearGradient(0,0,0,300);
     gradient.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
     gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
 
-    chart = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets: [{ data: temps, borderColor: '#2563eb', backgroundColor: gradient, tension: 0.4, fill: true, pointBackgroundColor: '#ffbb33', pointRadius: 5, pointHoverRadius: 7 }] },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { borderDash: [5,5] } } } }
-    });
+    if (!chart) {
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets: [{ data: temps, borderColor: '#2563eb', backgroundColor: gradient, tension: 0.4, fill: true, pointBackgroundColor: '#ffbb33', pointRadius: 5, pointHoverRadius: 7 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { borderDash: [5,5] } } } }
+      });
+    } else {
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = temps;
+      chart.data.datasets[0].backgroundColor = gradient;
+      chart.update();
+    }
   }
 
   async function getWeather(city) {
