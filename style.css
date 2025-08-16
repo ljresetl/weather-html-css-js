@@ -82,6 +82,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-height: 300px;
 }
 
 /* Пошук */
