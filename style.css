@@ -33,8 +33,10 @@ body {
   letter-spacing: -0.01em;
   color: #c7c7c7;
   text-align: center;
-  background: url("./images/backgraund-webP2.webp") no-repeat center center
-    fixed;
+  background: url("./images/backgraund-webP2.webp");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
   background-size: cover;
 }
 
