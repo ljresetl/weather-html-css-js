@@ -1,32 +1,15 @@
 h1,
 h2,
-h3,
-h4,
-h5,
-h6,
-p {
+p,
+input,
+button,
+option {
   margin: 0;
+  padding: 0;
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: currentColor;
-  font-style: normal;
 }
 
 button {
@@ -35,25 +18,12 @@ button {
   cursor: pointer;
 }
 
-img {
+/* img {
   display: block;
   width: 100%;
   max-width: 100%;
   height: auto;
-}
-
-.visually-hidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  clip-path: inset(100%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
+} */
 
 body {
   margin: 0;
@@ -68,6 +38,7 @@ body {
   line-height: 1;
   letter-spacing: -0.01em;
   color: #c7c7c7;
+  text-align: center;
 }
 
 a,
@@ -86,15 +57,11 @@ button {
   cursor: pointer;
 }
 
-button {
-  padding: 0px;
-}
-
 .container {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
+  align-items: center;
   margin: 0 auto;
   text-align: center;
   max-width: 375px;
@@ -114,10 +81,6 @@ section {
   section {
     padding: 40px 0px;
   }
-
-  .burger-menu {
-    display: none;
-  }
 }
 
 @media screen and (min-width: 1280px) {
@@ -130,229 +93,226 @@ section {
   section {
     padding: 50px 0px;
   }
-
-  button:hover,
-  .about-me-a:hover,
-  a.button:hover,
-  .modal-button:hover {
-    transform: scale(1.025);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
 }
 
-/* сагестіон */
-#suggestions {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  /* right: 156px; */
-  min-width: 100%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-}
-
-.suggestions-item {
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  color: #131414;
-}
-
-#suggestions .suggestions-item {
-  font-size: 14px; /* або будь-який інший */
-}
-
-.suggestions-item:hover {
-  background-color: #bcb5b5;
-}
-
-.suggestions-name {
-  font-weight: 200;
-}
-
-.suggestions-cc {
-  font-size: 20px;
-  color: #666;
-}
-/* сагестіон */
-
-.days {
+.pocasi {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  width: 100%;
+  gap: 20px;
 }
 
-.app-for-weather-container {
-  display: flex;
+.weather-container {
+  gap: 20px;
   flex-direction: column;
-  gap: 30px;
-}
-
-.search-input {
-  outline: none;
-  width: 90%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
 }
 
 .search {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-.search-input-wrap {
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   position: relative;
 }
 
-.search-select-btn {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.search-select {
-  padding: 12px 14px;
-  border-radius: 12px;
-  cursor: pointer;
+.input-search,
+.button-search,
+.select-lang {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
   outline: none;
+  box-shadow: none;
 }
 
-.btn {
-  padding: 12px 16px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #3b82f6, #2563eb);
-  color: white;
-  font-weight: 600;
+.button-search {
+  background-color: #2563eb;
+  color: #fff;
 }
 
-/* day-content */
-.day {
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.button-search:hover {
+  background: #1d4ed8;
 }
 
-.day-overlay {
+.days {
   display: flex;
-  gap: 20px;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(3, 7, 18, 0.3),
-    rgba(2, 6, 23, 0.75)
-  );
-}
-
-.day-content {
-  color: black;
-  display: flex;
+  justify-content: center;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 5px;
+  gap: 25px;
+  width: 100%;
+  height: auto;
+}
+
+.day {
+  position: relative;
+  background: #f0f4f8;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 2px solid #2563eb;
+}
+
+.day:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .day-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+}
+
+.day-date {
   font-weight: 600;
+  font-size: 18px;
+  color: #111827;
+  padding-bottom: 6px;
+}
+
+.day-desc {
   font-size: 14px;
+  color: #4b5563;
+  /* text-transform: capitalize; */
 }
 
 .day-temp {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-weight: 600;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+  color: #1f2937;
 }
 
 .now {
-  font-size: 42px;
-  line-height: 1;
+  font-size: 1.4rem;
+  color: #2563eb;
+  padding-bottom: 6px;
 }
 
 .minmax {
-  font-size: 14px;
+  color: #6b7280;
 }
 
 .day-meta {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
   font-size: 13px;
+  color: #374151;
 }
-/* day-content */
+
+.day-meta div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Сам список підказок */
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border: 1px solid #ccc;
+  border-top: none;
+  background: #3b648b;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 6px 6px;
+  width: 226px;
+}
+
+/* Кожен елемент списку */
+.autocomplete-item {
+  cursor: pointer;
+  padding: 8px 0px;
+  transition: background 0.2s;
+}
+
+/* Ховер і активний стан */
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background-color: #f0f0f0;
+  color: #111827;
+}
+
+/* Щоб input не мав зовнішньої рамки при фокусі */
+.autocomplete-input:focus {
+  outline: none;
+  border-color: #999;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
 
 @media screen and (min-width: 768px) {
-  .search-select-btn {
-    justify-content: center;
-    gap: 28px;
+  .search {
+    justify-content: space-between;
+    width: 100%;
   }
 
-  .search-select {
-    width: 80%;
+  .input-search {
+    width: 70%;
+  }
+
+  .button-search {
+    width: 28%;
+  }
+
+  .select-lang {
+    margin-left: auto;
   }
 
   .days {
     flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    /* width: 200px; */
-    gap: 20px;
-    /* justify-content: flex-start; */
+    gap: 10px;
   }
 
-  .day {
-    width: 300px;
-    height: 320px;
+  #hourlyChart {
+    max-width: 700px;
+    max-height: 300px;
+  }
+
+  .autocomplete-list {
+    width: 542px;
   }
 }
 
 @media screen and (min-width: 1280px) {
-  .search-input {
-    width: 96%;
+  .days {
+    /* width: 200px; */
+    height: 200px;
+    justify-content: space-between;
   }
 
-  .search-select-btn {
-    gap: 156px;
+  .day {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
   }
-}
 
-/* backgrounds */
-.bg-sunny {
-  background-image: url("https://images.unsplash.com/photo-1501973801540-537f08ccae7b?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-rain {
-  background-image: url("https://images.unsplash.com/photo-1468476396571-4d6f2a427ee7?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-snow {
-  background-image: url("https://images.unsplash.com/photo-1483664852095-d6cc6870702d?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-clouds {
-  background-image: url("https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-mist {
-  background-image: url("https://images.unsplash.com/photo-1482575832494-771f74bf6857?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-drizzle {
-  background-image: url("https://images.unsplash.com/photo-1503435824048-a799a3a84bf7?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-thunder {
-  background-image: url("https://images.unsplash.com/photo-1500674425229-f692875b0ab7?q=80&w=1600&auto=format&fit=crop");
-}
-.bg-default {
-  background-image: url("https://images.unsplash.com/photo-1454789548928-9efd52dc4031?q=80&w=1600&auto=format&fit=crop");
+  .day-top {
+    margin-bottom: 40px;
+    gap: 60px;
+  }
+
+  .day-temp {
+    justify-content: center;
+    gap: 80px;
+  }
+
+  #hourlyChart {
+    max-width: 1200px;
+    max-height: 300px;
+  }
+
+  .autocomplete-list {
+    width: 908px;
+  }
 }

@@ -1,261 +1,81 @@
-// ======= helpers =======
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+const API_KEY = "75fb45190a5b14c47de1c6a53e0ca8ab";
 
-const API_KEY = window.OWM_API_KEY; // з index.html
-const GEO_URL = "https://api.openweathermap.org/geo/1.0/direct";
-const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
+const cityInput = document.getElementById("cityInput");
+const searchBtn = document.getElementById("searchBtn");
+const daysEl = document.getElementById("weather");
+const ctx = document.getElementById("hourlyChart").getContext("2d");
+const langSelect = document.getElementById("langSelect");
+const autocompleteEl = document.getElementById("autocomplete");
 
-// normalize for startsWith across diacritics
-const removeDiacritics = (s) =>
-  (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+let currentLang = "cs";
+let chart;
+let groupedData = {};
+let cities = [];
 
-const startsWithLocale = (name, query, lang) => {
-  const a = removeDiacritics(String(name).toLocaleLowerCase(lang));
-  const b = removeDiacritics(String(query).toLocaleLowerCase(lang));
-  return a.startsWith(b);
+// 🔹 Завантаження JSON онлайн
+fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/refs/heads/main/cities.json")
+  .then(res => res.json())
+  .then(data => { 
+    cities = data; 
+    console.log("Cities loaded:", cities.length); 
+  })
+  .catch(err => console.error("Cannot load cities.json", err));
+
+// Тексти різними мовами
+const texts = {
+  cs: { title: "Předpověď počasí", search: "Hledat", placeholder: "Zadejte město", subtitle: "Hodinová předpověď" },
+  uk: { title: "Прогноз погоди", search: "Пошук", placeholder: "Введіть місто", subtitle: "Погодинний прогноз" },
+  en: { title: "Weather Forecast", search: "Search", placeholder: "Enter city", subtitle: "Hourly forecast" }
 };
 
-let citiesFallback = []; // офлайн fallback з cities.json
-let selectedPlace = null; // { name, lat, lon, country }
-
-// ======= load fallback once =======
-fetch("cities.json")
-  .then((r) => (r.ok ? r.json() : []))
-  .then((data) => (citiesFallback = Array.isArray(data) ? data : []))
-  .catch(() => {});
-
-// ======= UI refs =======
-const input = $("#cityInput");
-const suggestions = $("#suggestions");
-const langSelect = $("#langSelect");
-const searchBtn = $("#searchBtn");
-const daysEl = $("#weather");
-
-// ======= suggestions flow =======
-async function fetchRemoteSuggestions(q, lang) {
-  const url = new URL(GEO_URL);
-  url.searchParams.set("q", q);
-  url.searchParams.set("limit", "10");
-  url.searchParams.set("appid", API_KEY);
-  url.searchParams.set("lang", lang);
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Geo API error");
-  const data = await res.json();
-
-  return data
-    .map((it) => {
-      const local = (it.local_names && it.local_names[lang]) || null;
-      const displayName = local || it.name;
-      return {
-        name: displayName,
-        rawName: it.name,
-        country: it.country || "",
-        lat: it.lat,
-        lon: it.lon,
-      };
-    })
-    .filter((it) => startsWithLocale(it.name, q, lang));
+function updateTexts() {
+  const t = texts[currentLang];
+  document.getElementById("title").textContent = t.title;
+  searchBtn.textContent = t.search;
+  cityInput.placeholder = t.placeholder;
+  document.getElementById("subtitle").textContent = t.subtitle;
 }
 
-function fetchLocalSuggestions(q, lang) {
-  const key = lang === "uk" ? "name_uk" : lang === "cz" ? "name_cs" : "name_en";
-  return (citiesFallback || [])
-    .map((it) => ({
-      name: it[key] || it.name_en,
-      country: it.country || "",
-      lat: null,
-      lon: null,
-    }))
-    .filter((it) => startsWithLocale(it.name, q, lang))
-    .slice(0, 10);
-}
-
-function renderSuggestions(items) {
-  if (!items || items.length === 0) {
-    suggestions.style.display = "none";
-    suggestions.innerHTML = "";
-    return;
-  }
-  const html = items
-    .map(
-      (it, idx) => `
-      <div class="suggestions-item" data-idx="${idx}">
-        <div class="suggestions-name">${it.name}</div>
-        <div class="suggestions-cc">${it.country}</div>
-      </div>`
-    )
-    .join("");
-  suggestions.innerHTML = html;
-  suggestions.style.display = "block";
-
-  $$("#suggestions .suggestions-item").forEach((el, i) => {
-    el.addEventListener("click", () => {
-      const chosen = items[i];
-      selectedPlace = chosen;
-      input.value = chosen.name;
-      suggestions.style.display = "none";
-      suggestions.innerHTML = "";
-    });
-  });
-}
-
-let suggestTimer;
-function handleInput() {
-  const q = input.value.trim();
-  const lang = langSelect.value;
-  selectedPlace = null;
-
-  if (q.length < 1) {
-    renderSuggestions([]);
-    return;
-  }
-  clearTimeout(suggestTimer);
-  suggestTimer = setTimeout(async () => {
-    try {
-      const remote = await fetchRemoteSuggestions(q, lang);
-      if (remote.length) return renderSuggestions(remote);
-      const local = fetchLocalSuggestions(q, lang);
-      renderSuggestions(local);
-    } catch {
-      const local = fetchLocalSuggestions(q, lang);
-      renderSuggestions(local);
-    }
-  }, 120);
-}
-
-input.addEventListener("input", handleInput);
-input.addEventListener("focus", handleInput);
-langSelect.addEventListener("change", handleInput);
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".search-input-wrap")) {
-    suggestions.style.display = "none";
-  }
-});
-
-// ======= search flow =======
-async function ensureCoords(placeName, lang) {
-  if (selectedPlace && selectedPlace.lat && selectedPlace.lon) {
-    return selectedPlace;
-  }
-  const url = new URL(GEO_URL);
-  url.searchParams.set("q", placeName);
-  url.searchParams.set("limit", "1");
-  url.searchParams.set("appid", API_KEY);
-  url.searchParams.set("lang", lang);
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Geocoding failed");
-  const data = await res.json();
-  if (!data || !data.length) throw new Error("Місто не знайдено");
-  const it = data[0];
-  return {
-    name: (it.local_names && it.local_names[lang]) || it.name,
-    lat: it.lat,
-    lon: it.lon,
-    country: it.country || "",
-  };
-}
-
-function groupByDay(list) {
-  const by = {};
-  for (const item of list) {
-    const date = item.dt_txt.split(" ")[0];
-    (by[date] ||= []).push(item);
-  }
-  return by;
-}
-
-function pickRepresentative(items) {
-  const noon = items.find((it) => it.dt_txt.includes("12:00:00"));
-  return noon || items[Math.floor(items.length / 2)];
-}
-
-function classifyBg(main) {
-  const m = (main || "").toLowerCase();
-  if (m.includes("clear")) return "bg-sunny";
-  if (m.includes("rain")) return "bg-rain";
-  if (m.includes("snow")) return "bg-snow";
-  if (m.includes("thunder")) return "bg-thunder";
-  if (m.includes("drizzle")) return "bg-drizzle";
-  if (m.includes("mist") || m.includes("fog") || m.includes("haze")) return "bg-mist";
-  if (m.includes("cloud")) return "bg-clouds";
-  return "bg-default";
-}
-
-function fmtDate(dateStr, lang) {
+// Форматування дати
+function fmtDate(dateStr) {
   const d = new Date(dateStr);
-  return d.toLocaleDateString(lang, { weekday: "short", day: "2-digit", month: "short" });
+  return d.toLocaleDateString(currentLang, { weekday: "short", day: "2-digit", month: "short" });
 }
 
 function makeIconUrl(icon) {
   return `https://openweathermap.org/img/wn/${icon}@2x.png`;
 }
 
-// ======= text color based on image =======
-function setTextColorBasedOnImage(imageUrl, selector = '.days') {
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = imageUrl;
-
-  img.onload = function () {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    const w = canvas.width = 50;
-    const h = canvas.height = 50;
-    ctx.drawImage(img, 0, 0, w, h);
-
-    const data = ctx.getImageData(0, 0, w, h).data;
-    let r, g, b, avg, total = 0;
-
-    for (let i = 0; i < data.length; i += 4) {
-      r = data[i];
-      g = data[i + 1];
-      b = data[i + 2];
-      avg = (r + g + b) / 3;
-      total += avg;
-    }
-
-    const brightness = total / (w * h);
-    const textColor = brightness < 128 ? 'white' : 'black';
-
-    document.querySelector(selector).style.color = textColor;
-  };
-}
-
-function renderDays(cityName, data, lang) {
+// Показати дні
+function renderDays(data) {
   daysEl.innerHTML = "";
-  if (!data || !data.list) {
-    daysEl.innerHTML = `<p>Немає даних.</p>`;
-    return;
-  }
-  const byDay = groupByDay(data.list);
-  const dates = Object.keys(byDay).slice(0, 5);
+  groupedData = {};
 
-  dates.forEach((date) => {
-    const items = byDay[date];
-    const rep = pickRepresentative(items);
-    const main = rep.weather?.[0]?.main || "";
-    const desc = rep.weather?.[0]?.description || "";
-    const icon = rep.weather?.[0]?.icon || "01d";
-    const now = Math.round(rep.main?.temp ?? 0);
-    const tmin = Math.round(Math.min(...items.map((i) => i.main.temp_min)));
-    const tmax = Math.round(Math.max(...items.map((i) => i.main.temp_max)));
-    const wind = Math.round(rep.wind?.speed ?? 0);
-    const humidity = Math.round(rep.main?.humidity ?? 0);
+  data.list.forEach(item => {
+    const date = item.dt_txt.split(" ")[0];
+    if (!groupedData[date]) groupedData[date] = [];
+    groupedData[date].push(item);
+  });
 
-    const bgClass = classifyBg(main);
+  Object.keys(groupedData).slice(0, 5).forEach((date, i) => {
+    const items = groupedData[date];
+    const temps = items.map(x => x.main.temp);
+    const tmin = Math.round(Math.min(...temps));
+    const tmax = Math.round(Math.max(...temps));
+    const now = Math.round(items[0].main.temp);
+    const wind = items[0].wind.speed;
+    const humidity = items[0].main.humidity;
+    const icon = items[4]?.weather[0].icon || items[0].weather[0].icon;
+    const desc = items[4]?.weather[0].description || items[0].weather[0].description;
 
     const el = document.createElement("div");
-    el.className = `day ${bgClass}`;
+    el.className = `day ${i===0 ? "active" : ""}`;
     el.innerHTML = `
       <div class="day-overlay"></div>
       <div class="day-content">
         <div class="day-top">
           <div>
-            <div class="day-date">${fmtDate(date, lang)}</div>
+            <div class="day-date">${fmtDate(date)}</div>
             <div class="day-desc">${desc}</div>
           </div>
           <img src="${makeIconUrl(icon)}" alt="${desc}" width="64" height="64" />
@@ -270,44 +90,71 @@ function renderDays(cityName, data, lang) {
         </div>
       </div>
     `;
+    el.onclick = () => {
+      document.querySelectorAll(".day").forEach(d => d.classList.remove("active"));
+      el.classList.add("active");
+      renderChart(items);
+    };
     daysEl.appendChild(el);
   });
 
-  // Встановлюємо колір тексту залежно від головного дня
-  const mainIcon = byDay[Object.keys(byDay)[0]][0].weather?.[0]?.icon;
-  if (mainIcon) {
-    const iconUrl = makeIconUrl(mainIcon);
-    setTextColorBasedOnImage(iconUrl, '.days');
-  }
+  renderChart(groupedData[Object.keys(groupedData)[0]]);
 }
 
-async function onSearch() {
-  const lang = langSelect.value;
-  const q = input.value.trim();
-  if (!q) {
-    input.focus();
-    return;
-  }
-  daysEl.innerHTML = `<p>Завантаження…</p>`;
-  try {
-    const place = await ensureCoords(q, lang);
-    const url = new URL(FORECAST_URL);
-    url.searchParams.set("lat", place.lat);
-    url.searchParams.set("lon", place.lon);
-    url.searchParams.set("appid", API_KEY);
-    url.searchParams.set("units", "metric");
-    url.searchParams.set("lang", lang);
+function renderChart(items) {
+  const labels = items.map(i => i.dt_txt.split(" ")[1].slice(0,5));
+  const temps = items.map(i => i.main.temp);
+  if (chart) chart.destroy();
 
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Forecast API failed");
-    const data = await res.json();
-    renderDays(place.name, data, lang);
-  } catch (err) {
-    daysEl.innerHTML = `<p>${err.message}</p>`;
-  }
+  const gradient = ctx.createLinearGradient(0,0,0,300);
+  gradient.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
+  gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ data: temps, borderColor: '#2563eb', backgroundColor: gradient, tension: 0.4, fill: true, pointBackgroundColor: '#ffbb33', pointRadius: 5, pointHoverRadius: 7 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { borderDash: [5,5] } } } }
+  });
 }
 
-searchBtn.addEventListener("click", onSearch);
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") onSearch();
+async function getWeather() {
+  const city = cityInput.value.trim();
+  if (!city) return;
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=${currentLang}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.cod === "200") renderDays(data);
+}
+
+// Автопідказки
+cityInput.addEventListener("input", () => {
+  const val = cityInput.value.toLowerCase();
+  autocompleteEl.innerHTML = "";
+  if (!val) return;
+
+  const matches = cities.filter(c => 
+    c.name.toLowerCase().includes(val) ||
+    (c.uk && c.uk.toLowerCase().includes(val)) ||
+    (c.cs && c.cs.toLowerCase().includes(val))
+  ).slice(0, 10);
+
+  matches.forEach(c => {
+    const item = document.createElement("div");
+    item.className = "autocomplete-item";
+    item.textContent = `${c.name} / ${c.uk || ""} / ${c.cs || ""}, ${c.country}`;
+    item.onclick = () => {
+      cityInput.value = c.name;
+      autocompleteEl.innerHTML = "";
+      getWeather();
+    };
+    autocompleteEl.appendChild(item);
+  });
 });
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".search")) autocompleteEl.innerHTML = "";
+});
+
+searchBtn.onclick = getWeather;
+langSelect.onchange = () => { currentLang = langSelect.value; updateTexts(); };
+updateTexts();
