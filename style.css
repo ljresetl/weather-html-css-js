@@ -272,7 +272,14 @@ section {
 
   .days {
     flex-direction: row;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .day {
+    flex: 1 1 calc(33.333% - 20px); /* 3 в ряд */
+    box-sizing: border-box;
+    max-width: 200px;
   }
 
   #hourlyChart {
