@@ -18,13 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let groupedData = {};
   let cities = [];
   let selectedIndex = -1;
+  let prevActiveDay = null;
 
   fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/refs/heads/main/cities.json")
     .then(res => res.json())
     .then(data => { 
       cities = data; 
       console.log("Cities loaded:", cities.length); 
-      // --- Показуємо Прагу за замовчуванням ---
       getWeather("Prague");
       cityInput.value = "Prague";
     })
@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderDays(data) {
     daysEl.innerHTML = "";
     groupedData = {};
+    const fragment = document.createDocumentFragment();
 
     data.list.forEach(item => {
       const date = item.dt_txt.split(" ")[0];
@@ -76,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const el = document.createElement("div");
       el.className = `day ${i===0 ? "active" : ""}`;
+      if (i === 0) prevActiveDay = el;
       el.innerHTML = `
         <div class="day-overlay"></div>
         <div class="day-content">
@@ -97,20 +99,28 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
       el.onclick = () => {
-        document.querySelectorAll(".day").forEach(d => d.classList.remove("active"));
+        if (prevActiveDay) prevActiveDay.classList.remove("active");
         el.classList.add("active");
+        prevActiveDay = el;
         renderChart(items);
       };
-      daysEl.appendChild(el);
+      fragment.appendChild(el);
     });
 
+    daysEl.appendChild(fragment);
     renderChart(groupedData[Object.keys(groupedData)[0]]);
   }
 
   function renderChart(items) {
     const labels = items.map(i => i.dt_txt.split(" ")[1].slice(0,5));
     const temps = items.map(i => i.main.temp);
-    if (chart) chart.destroy();
+
+    if (chart) {
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = temps;
+      chart.update();
+      return;
+    }
 
     const gradient = ctx.createLinearGradient(0,0,0,300);
     gradient.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
@@ -153,7 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Автокомпліт ---
   cityInput.addEventListener("input", () => {
     const val = cityInput.value.toLowerCase();
     autocompleteEl.innerHTML = "";
@@ -166,6 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
       (c.cs && c.cs.toLowerCase().includes(val))
     ).slice(0, 10);
 
+    const fragment = document.createDocumentFragment();
     matches.forEach(c => {
       const item = document.createElement("div");
       item.className = "autocomplete-item";
@@ -175,15 +185,16 @@ document.addEventListener("DOMContentLoaded", () => {
         autocompleteEl.innerHTML = "";
         cityInput.focus();
       };
-      autocompleteEl.appendChild(item);
+      fragment.appendChild(item);
     });
+    autocompleteEl.appendChild(fragment);
   });
 
   function updateHighlight(items) {
     items.forEach((item, idx) => {
       if (idx === selectedIndex) {
         item.classList.add("highlight");
-        item.scrollIntoView({ block: "nearest" });
+        requestAnimationFrame(() => item.scrollIntoView({ block: "nearest" }));
       } else {
         item.classList.remove("highlight");
       }
