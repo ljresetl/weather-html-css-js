@@ -283,13 +283,13 @@ section {
 @media screen and (min-width: 1280px) {
   .days {
     /* width: 200px; */
-    height: 200px;
+    height: 300px;
     justify-content: space-between;
   }
 
   .day {
     width: 250px;
-    height: 250px;
+    height: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -309,6 +309,7 @@ section {
   #hourlyChart {
     max-width: 1200px;
     max-height: 300px;
+    /* max-height: 100%; */
   }
 
   .autocomplete-list {
