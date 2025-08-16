@@ -4,20 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta name="description" content="Předpověď počasí." />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="./script.js" defer></script>
   </head>
+
   <body>
     <header class="prepoved-pocasi">
       <div class="container">
         <h1 class="title-h" id="title">Předpověď počasí</h1>
       </div>
     </header>
+
     <section class="pocasi">
       <div class="container weather-container">
         <div class="search">
@@ -43,7 +54,5 @@
         <canvas id="hourlyChart" width="407" height="300"></canvas>
       </div>
     </section>
-
-    <script src="./script.js"></script>
   </body>
 </html>
