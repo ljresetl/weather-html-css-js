@@ -115,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const labels = items.map(i => i.dt_txt.split(" ")[1].slice(0,5));
     const temps = items.map(i => i.main.temp);
 
-    // Створюємо градієнт заново при кожному оновленні
     const gradient = ctx.createLinearGradient(0,0,0,300);
     gradient.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
     gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
@@ -181,12 +180,19 @@ document.addEventListener("DOMContentLoaded", () => {
     matches.forEach(c => {
       const item = document.createElement("div");
       item.className = "autocomplete-item";
-      item.textContent = `${c.name} / ${c.uk || ""} / ${c.cs || ""}, ${c.country}`;
-      item.onclick = () => {
+
+      const parts = [c.name];
+      if (c.uk) parts.push(c.uk);
+      if (c.cs) parts.push(c.cs);
+      const displayText = parts.join(" / ") + `, ${c.country}`;
+
+      item.textContent = displayText;
+      item.addEventListener("click", () => {
         cityInput.value = c.name;
         autocompleteEl.innerHTML = "";
+        selectedIndex = -1;
         cityInput.focus();
-      };
+      });
       fragment.appendChild(item);
     });
     autocompleteEl.appendChild(fragment);
@@ -211,26 +217,30 @@ document.addEventListener("DOMContentLoaded", () => {
       selectedIndex = (selectedIndex + 1) % items.length; 
       updateHighlight(items); 
       e.preventDefault(); 
-    }
-    else if (e.key === "ArrowUp") { 
+    } else if (e.key === "ArrowUp") { 
       selectedIndex = (selectedIndex - 1 + items.length) % items.length; 
       updateHighlight(items); 
       e.preventDefault(); 
-    }
-    else if (e.key === "Enter") { 
+    } else if (e.key === "Enter") { 
       if (selectedIndex >= 0) { 
         cityInput.value = items[selectedIndex].textContent.split(",")[0]; 
         autocompleteEl.innerHTML = ""; 
         selectedIndex = -1; 
-        e.preventDefault();
       }
       getWeather(cityInput.value);
+      e.preventDefault();
     }
   });
 
   searchBtn.addEventListener("click", () => getWeather(cityInput.value));
-  langSelect.addEventListener("change", () => { currentLang = langSelect.value; updateTexts(); getWeather(cityInput.value); });
-  document.addEventListener("click", e => { if (!autocompleteEl.contains(e.target) && e.target !== cityInput) autocompleteEl.innerHTML = ""; });
+  langSelect.addEventListener("change", () => { 
+    currentLang = langSelect.value; 
+    updateTexts(); 
+    getWeather(cityInput.value); 
+  });
+  document.addEventListener("click", e => { 
+    if (!autocompleteEl.contains(e.target) && e.target !== cityInput) autocompleteEl.innerHTML = ""; 
+  });
 
   updateTexts();
 });
