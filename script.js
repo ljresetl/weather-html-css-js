@@ -201,38 +201,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  cityInput.addEventListener("keydown", (e) => {
-    const items = autocompleteEl.querySelectorAll(".autocomplete-item");
+  cityInput.addEventListener("keydown", e => {
+    const items = Array.from(autocompleteEl.children);
     if (!items.length) return;
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      selectedIndex = (selectedIndex + 1) % items.length;
-      updateHighlight(items);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-      updateHighlight(items);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (selectedIndex >= 0 && selectedIndex < items.length) {
-        cityInput.value = items[selectedIndex].textContent.split(",")[0];
-        autocompleteEl.innerHTML = "";
-        selectedIndex = -1;
-      }
-      getWeather(cityInput.value.trim());
-    }
+    if (e.key === "ArrowDown") { selectedIndex = (selectedIndex + 1) % items.length; updateHighlight(items); e.preventDefault(); }
+    else if (e.key === "ArrowUp") { selectedIndex = (selectedIndex - 1 + items.length) % items.length; updateHighlight(items); e.preventDefault(); }
+    else if (e.key === "Enter") { if (selectedIndex >= 0) { cityInput.value = items[selectedIndex].textContent.split(",")[0]; autocompleteEl.innerHTML = ""; selectedIndex = -1; e.preventDefault(); } }
   });
 
-  document.addEventListener("click", e => {
-    if (!e.target.closest(".search")) autocompleteEl.innerHTML = "";
-  });
+  searchBtn.addEventListener("click", () => getWeather(cityInput.value));
 
-  searchBtn.onclick = () => getWeather(cityInput.value.trim());
-  cityInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") getWeather(cityInput.value.trim());
-  });
+  langSelect.addEventListener("change", () => { currentLang = langSelect.value; updateTexts(); getWeather(cityInput.value); });
 
-  langSelect.onchange = () => { currentLang = langSelect.value; updateTexts(); };
+  document.addEventListener("click", e => { if (!autocompleteEl.contains(e.target) && e.target !== cityInput) autocompleteEl.innerHTML = ""; });
+  
   updateTexts();
 });

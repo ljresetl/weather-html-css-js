@@ -1,3 +1,4 @@
+/* Скидання базових відступів і паддінгів */
 h1,
 h2,
 p,
@@ -8,93 +9,63 @@ option {
   padding: 0;
 }
 
+/* Плавна прокрутка */
 html {
   scroll-behavior: smooth;
 }
 
+/* Кнопки */
 button {
   font-family: inherit;
   color: currentColor;
   cursor: pointer;
 }
 
-/* img {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-} */
-
+/* Основні стилі body */
 body {
   margin: 0;
   padding: 0;
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial,
     sans-serif;
-  letter-spacing: 0.02em;
-  background: url("./images/foto-backgraund.png") no-repeat center center fixed;
-  background-size: cover;
   font-weight: 400;
   font-size: 28px;
   line-height: 1;
   letter-spacing: -0.01em;
   color: #c7c7c7;
   text-align: center;
+  background: url("./images/foto-backgraund.png") no-repeat center center fixed;
+  background-size: cover;
 }
 
+/* Послідовні елементи */
 a,
 button,
 input,
 input::placeholder {
-  transition-duration: 250ms;
-  transition-property: color, background-color, border, box-shadow, visibility,
-    opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
 }
 
-a,
-button {
-  cursor: pointer;
-}
-
+/* Контейнер */
 .container {
   display: flex;
-  align-items: center;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
   text-align: center;
   max-width: 375px;
-  padding: 0px 16px;
+  padding: 0 16px;
 }
 
+/* Секції */
 section {
-  padding: 64px 0px;
+  padding: 64px 0;
 }
 
-@media screen and (min-width: 768px) {
-  .container {
-    padding: 0px 20px;
-    max-width: 768px;
-  }
-
-  section {
-    padding: 40px 0px;
-  }
-}
-
-@media screen and (min-width: 1280px) {
-  .container {
-    min-width: 1280px;
-    padding-left: 25px;
-    padding-right: 25px;
-  }
-
-  section {
-    padding: 50px 0px;
-  }
-}
-
+/* Заголовки */
 .title-h {
   font-size: 2.5rem;
   font-weight: 700;
@@ -106,11 +77,14 @@ section {
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Контейнери погоди */
 .weather-container {
-  gap: 20px;
+  display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
+/* Пошук */
 .search {
   display: flex;
   justify-content: center;
@@ -119,6 +93,7 @@ section {
   position: relative;
 }
 
+/* Поля та кнопки */
 .input-search,
 .button-search,
 .select-lang {
@@ -136,13 +111,14 @@ section {
 }
 
 .button-search:hover {
-  background: #1d4ed8;
+  background-color: #1d4ed8;
 }
 
+/* Дні */
 .days {
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
   gap: 25px;
   width: 100%;
   height: auto;
@@ -155,8 +131,8 @@ section {
   overflow: hidden;
   padding: 15px;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
   border: 2px solid #2563eb;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .day:hover {
@@ -180,7 +156,6 @@ section {
 .day-desc {
   font-size: 14px;
   color: #4b5563;
-  /* text-transform: capitalize; */
 }
 
 .day-temp {
@@ -215,7 +190,7 @@ section {
   gap: 4px;
 }
 
-/* Сам список підказок */
+/* Автодоповнення */
 .autocomplete-list {
   position: absolute;
   top: 100%;
@@ -231,28 +206,35 @@ section {
   width: 226px;
 }
 
-/* Кожен елемент списку */
 .autocomplete-item {
   cursor: pointer;
   padding: 8px 1px;
   transition: background 0.2s;
 }
 
-/* Ховер і активний стан */
 .autocomplete-item:hover,
 .autocomplete-item.active {
   background-color: #f0f0f0;
   color: #111827;
 }
 
-/* Щоб input не мав зовнішньої рамки при фокусі */
 .autocomplete-input:focus {
   outline: none;
   border-color: #999;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Медіа 768px */
 @media screen and (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 0 20px;
+  }
+
+  section {
+    padding: 40px 0;
+  }
+
   .search {
     justify-content: space-between;
     width: 100%;
@@ -277,9 +259,9 @@ section {
   }
 
   .day {
-    flex: 1 1 calc(33.333% - 20px); /* 3 в ряд */
-    box-sizing: border-box;
+    flex: 1 1 calc(33.333% - 20px);
     max-width: 200px;
+    box-sizing: border-box;
   }
 
   #hourlyChart {
@@ -292,11 +274,20 @@ section {
   }
 }
 
+/* Медіа 1280px */
 @media screen and (min-width: 1280px) {
+  .container {
+    min-width: 1280px;
+    padding: 0 25px;
+  }
+
+  section {
+    padding: 50px 0;
+  }
+
   .days {
-    /* width: 200px; */
-    height: 200px;
     justify-content: space-between;
+    height: auto;
   }
 
   .day {
@@ -321,7 +312,6 @@ section {
   #hourlyChart {
     max-width: 1200px;
     max-height: 300px;
-    /* max-height: 100%; */
   }
 
   .autocomplete-list {
