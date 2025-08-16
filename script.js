@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(err => console.error("Cannot load cities.json", err));
 
   const texts = {
-    cs: { title: "Předpověď počasí", search: "Hledat", placeholder: "Zadejte město", subtitle: "Hodinová předpověď" },
-    uk: { title: "Прогноз погоди", search: "Пошук", placeholder: "Введіть місто", subtitle: "Погодинний прогноз" },
-    en: { title: "Weather Forecast", search: "Search", placeholder: "Enter city", subtitle: "Hourly forecast" }
+    cs: { title: "Předpověď počasí", search: "Hledat", placeholder: "Zadejte město", subtitle: "Hodinová předpověď", notFound: "Město nenalezeno" },
+    uk: { title: "Прогноз погоди", search: "Пошук", placeholder: "Введіть місто", subtitle: "Погодинний прогноз", notFound: "Місто не знайдено" },
+    en: { title: "Weather Forecast", search: "Search", placeholder: "Enter city", subtitle: "Hourly forecast", notFound: "City not found" }
   };
 
   function updateTexts() {
@@ -123,12 +123,38 @@ document.addEventListener("DOMContentLoaded", () => {
   async function getWeather() {
     const city = cityInput.value.trim();
     if (!city) return;
+
+    // Перевірка, чи місто є у базі
+    const cityExists = cities.some(c => 
+      c.name.toLowerCase() === city.toLowerCase() ||
+      (c.uk && c.uk.toLowerCase() === city.toLowerCase()) ||
+      (c.cs && c.cs.toLowerCase() === city.toLowerCase())
+    );
+
+    if (!cityExists) {
+      alert(texts[currentLang].notFound);
+      setTimeout(() => location.reload(), 3000);
+      return;
+    }
+
     const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=${currentLang}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.cod === "200") renderDays(data);
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.cod === "200") {
+        renderDays(data);
+      } else {
+        alert(texts[currentLang].notFound);
+        setTimeout(() => location.reload(), 3000);
+      }
+    } catch (err) {
+      console.error(err);
+      alert(texts[currentLang].notFound);
+      setTimeout(() => location.reload(), 3000);
+    }
   }
 
+  // 🔹 Автокомпліт без виклику getWeather
   cityInput.addEventListener("input", () => {
     const val = cityInput.value.toLowerCase();
     autocompleteEl.innerHTML = "";
@@ -145,19 +171,26 @@ document.addEventListener("DOMContentLoaded", () => {
       item.className = "autocomplete-item";
       item.textContent = `${c.name} / ${c.uk || ""} / ${c.cs || ""}, ${c.country}`;
       item.onclick = () => {
-        cityInput.value = c.name;
-        autocompleteEl.innerHTML = "";
-        getWeather();
+        cityInput.value = c.name;       // вставляємо назву міста
+        autocompleteEl.innerHTML = "";  // ховаємо автокомпліт
+        cityInput.focus();              // залишаємо фокус
       };
       autocompleteEl.appendChild(item);
     });
   });
 
+  // Закрити автокомпліт при кліку поза полем
   document.addEventListener("click", e => {
     if (!e.target.closest(".search")) autocompleteEl.innerHTML = "";
   });
 
+  // Пошук по кнопці і Enter
   searchBtn.onclick = getWeather;
+  cityInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") getWeather();
+  });
+
+  // Зміна мови
   langSelect.onchange = () => { currentLang = langSelect.value; updateTexts(); };
   updateTexts();
 });
