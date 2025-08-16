@@ -226,6 +226,12 @@ section {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
+.footer-p {
+  padding: 20px 0px;
+  font-size: small;
+  color: #ffffff;
+}
+
 /* Медіа 768px */
 @media screen and (min-width: 768px) {
   .container {

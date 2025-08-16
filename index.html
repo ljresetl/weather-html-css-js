@@ -38,36 +38,45 @@
         <h1 class="title-h" id="title">Předpověď počasí</h1>
       </div>
     </header>
+    <main>
+      <section class="pocasi">
+        <div class="container weather-container">
+          <div class="search">
+            <input
+              class="input-search"
+              type="text"
+              id="cityInput"
+              placeholder="Zadejte město"
+              autocomplete="off"
+            />
+            <button class="button-search" id="searchBtn">Hledat</button>
+            <div id="autocomplete" class="autocomplete-list"></div>
+          </div>
 
-    <section class="pocasi">
-      <div class="container weather-container">
-        <div class="search">
-          <input
-            class="input-search"
-            type="text"
-            id="cityInput"
-            placeholder="Zadejte město"
-            autocomplete="off"
-          />
-          <button class="button-search" id="searchBtn">Hledat</button>
-          <div id="autocomplete" class="autocomplete-list"></div>
+          <select class="select-lang" id="langSelect">
+            <label for="langSelect"
+              >Jazyk / Мова / Language:
+              <option value="cs" selected>Čeština</option>
+              <option value="uk">Українська</option>
+              <option value="en">English</option></label
+            >
+          </select>
+
+          <div id="weather" class="days"></div>
+          <h2 class="subtitle-h" id="subtitle">Hodinová předpověď</h2>
+          <canvas
+            id="hourlyChart"
+            width="407"
+            height="300"
+            style="width: 100%; max-width: 1200px; height: 300px"
+          ></canvas>
         </div>
-
-        <select class="select-lang" id="langSelect">
-          <option value="cs" selected>Čeština</option>
-          <option value="uk">Українська</option>
-          <option value="en">English</option>
-        </select>
-
-        <div id="weather" class="days"></div>
-        <h2 class="subtitle-h" id="subtitle">Hodinová předpověď</h2>
-        <canvas
-          id="hourlyChart"
-          width="407"
-          height="300"
-          style="width: 100%; max-width: 1200px; height: 300px"
-        ></canvas>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p class="footer-p">&copy; 2025 Weather App</p>
       </div>
-    </section>
+    </footer>
   </body>
 </html>
