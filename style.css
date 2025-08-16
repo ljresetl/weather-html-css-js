@@ -217,7 +217,6 @@ section {
   left: 0;
   right: 0;
   z-index: 1000;
-  border: 1px solid #ccc;
   border-top: none;
   background: #3b648b;
   max-height: 200px;
