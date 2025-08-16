@@ -13,7 +13,7 @@ let groupedData = {};
 let cities = [];
 
 // 🔹 Завантаження JSON онлайн
-fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/refs/heads/main/cities.json")
+fetch("https://raw.githubusercontent.com/ljresetl/weather-cities/main/cities.json")
   .then(res => res.json())
   .then(data => { 
     cities = data; 
