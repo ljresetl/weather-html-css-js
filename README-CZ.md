@@ -1,19 +1,61 @@
-Weather Forecast App
 Popis aplikace
 
 Tato aplikace zobrazuje předpověď počasí pro vybraná města. Uživatel může vyhledávat město pomocí našeptávače a zobrazit hodinovou i denní předpověď. Aplikace podporuje více jazyků: češtinu, ukrajinštinu a angličtinu.
 
+Funkce
+
+Vyhledávání města s automatickým doplňováním
+
+Denní a hodinová předpověď
+
+Graf teplot po hodinách
+
+Informace o větru a vlhkosti
+
+Vícejazyčné prostředí (čeština, ukrajinština, angličtina)
+
+Použité technologie a kód
+
+HTML5 – struktura aplikace
+
+CSS3 – stylování a responzivní design
+
+JavaScript (ES6) – logika aplikace, práce s API a událostmi
+
+Chart.js – grafy hodinových teplot
+
+OpenWeatherMap API – získávání aktuálních dat o počasí
+
+JSON – seznam měst pro automatické doplňování
+
+Fetch API – dotazy na externí zdroje dat
+
 Spuštění aplikace
 
-Klonujte repozitář nebo stáhněte soubory projektu.
+Klonování repozitáře:
 
-Otevřete index.html ve webovém prohlížeči (např. Chrome, Firefox nebo Edge).
+git clone https://github.com/ljresetl/weather-app.git
+cd weather-app
 
-Zadejte město do vyhledávacího pole a klikněte na Hledat nebo stiskněte Enter.
+Spuštění lokálního serveru:
 
-Hodinová předpověď se zobrazí v grafu, denní přehled ve formě seznamu.
+# Python 3
 
-Poznámka: Pro zobrazení dat je nutné mít aktivní připojení k internetu, protože aplikace načítá data z OpenWeatherMap API a seznam měst z JSON online.
+python -m http.server 8000
+
+Otevřete prohlížeč a přejděte na:
+
+http://localhost:8000
+
+Použití:
+
+Zadejte název města do vyhledávacího pole
+
+Klikněte na Hledat / Search / Пошук nebo stiskněte Enter
+
+Vyberte jazyk z rozbalovací nabídky
+
+Zobrazte hodinový graf a denní přehled
 
 Podporované prohlížeče
 
@@ -44,7 +86,7 @@ Zobrazení předpovědi:
 
 Denní přehled s minimální a maximální teplotou, větrnými podmínkami a vlhkostí
 
-Aktivní den je zvýrazněn a kliknutím se mění graf hodinové předpovědi
+Aktivní den je zvýrazněn; kliknutím se mění graf hodinové předpovědi
 
 Hodinový graf:
 
