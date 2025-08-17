@@ -6,25 +6,21 @@
     <title>Weather App</title>
     <meta name="description" content="Předpověď počasí." />
 
-    <!-- Підвантаження шрифтів Google -->
+    <!-- CSS обов'язково першим -->
+    <link rel="stylesheet" href="./style.css" />
+
+    <!-- Google Fonts з display=swap (щоб не було стрибка) -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
-
-    <!-- Асинхронне підвантаження основного CSS -->
-    <link
       rel="stylesheet"
-      href="./style.css"
-      media="print"
-      onload="this.media='all'"
+    />
+
+    <!-- preload картинки (опціонально) -->
+    <link
+      rel="preload"
+      as="image"
+      href="./images/backgraund-webP2.webp"
+      type="image/webp"
     />
 
     <!-- JS -->
@@ -64,12 +60,7 @@
 
           <div id="weather" class="days"></div>
           <h2 class="subtitle-h" id="subtitle">Hodinová předpověď</h2>
-          <canvas
-            id="hourlyChart"
-            width="407"
-            height="300"
-            style="width: 100%; max-width: 1200px; height: 300px"
-          ></canvas>
+          <canvas id="hourlyChart" width="407" height="300"></canvas>
         </div>
       </section>
     </main>
